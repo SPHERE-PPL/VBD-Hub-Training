@@ -1,0 +1,406 @@
+\chapter{Spatial analysis and autocorrelation}
+\section*{Overview}
+This is the second session in the `autocorrelation' series, in which
+we're going to cover the kinds of problems that can arise when we
+collect data at different points in space. As with time series
+analysis, it can be difficult to think of how we could collect data
+\emph{outside} of space, so perhaps it's best to think of these
+techniques as important for data where your explanatory variables
+change across space. We will only be covering two-dimensional space in
+this lecture series, and it is very rare for biologists (or really any
+scientists) to need to control for spatial autocorrelation in a
+three-dimensional setting. Typically, if you have variation in height
+(elevation) in your data, this is fitted as an explanatory
+variable. Perhaps the only exception to this in a biological setting
+is marine data, and while I have only rarely seen studies of pelagic
+data that need to account for all three dimensions, in such cases the
+extension of these techniques (if not these precise packages) to such
+data is trivial. To begin with, we're going to extend the classic
+concept of correlation to account for \emph{spatial} autocorrelation,
+which will give us a way to detect whether spatial autocorrelation
+exists in our datasets. We'll then cover two common methods for
+working with spatial data (autoregressive models and Generalized Least
+Squares (GLS) models), and then finish up with some hands-on
+experience working with spatial data.
+
+\section{Detecting spatial autocorrelation}
+While we have spent a great deal of time in this course talking about
+the square of the correlation coefficient ($r^2$; see equation
+\ref{r2-equ}), but we have not considered its square-root in much
+detail. You have encountered the \emph{correlation coefficient} in
+previous statistical classes, but let's review it here as we can
+detect spatial autocorrelation using an extension of it. The
+correlation coefficient, $r$, measures whether or not two vectors of
+data are correlated. There are many different definitions of it but,
+importantly, the \emph{Pearson's correlation coefficient} we are
+focusing on today doesn't care which of them is the response or
+explanatory variable---they're all the same to it. It is defined as:
+
+\begin{equation}
+  r = \frac{\text{Outliers in x} \cdot \text{Outliers in y}}{\text{Variance in x and y}} = \frac{\sum((x - \bar{x})(y-\bar{y}))}{\sqrt{\sum(x-\bar{x})^2}\sqrt{\sum(y-\bar{y})^2}}
+  \label{pearson-equ}
+\end{equation}
+
+Where $x$ and $y$ are the two variables we are testing for
+correlation, and $\bar{x}$ and $\bar{y}$ are the means of these two
+variables. The idea of a correlation test is to see whether values
+that are greater than the mean in one variable are paired with values
+that are above or below the mean in the other variable (that's our
+\emph{observation}, and our \emph{expectation} is they're not), in the
+context of how much background \emph{variation} there is in the two
+variables\footnote{Surprise! It's another test statistic!}. If there
+were lots of unusually large values in $x$ that were paired with
+unusually low values in $y$, we would tend to be multiplying lots of
+large positive values with lots of negative values, and would sum
+these up to get a very large negative value. This would be divided by
+the overall variation in the two variables, and we would get a
+negative number that was close to $-1$. The correlation coefficient
+can only range between $-1$ and $+1$: values closer to $-1$ mean there
+is a \emph{negative} correlation between the values, values closer to
+$+1$ mean a positive value, and values closer to $0$ tend to mean
+there's little correlation between the variables.
+
+So how can we use this to measure the correlation of values \emph{in
+  the same variable} through space? Using something called
+\emph{Moran's I}, which is remarkably similar to a Pearson's
+correlation coefficient, and is defined as:
+
+\begin{equation}
+  I = \text{How many things} \cdot \frac{\text{Outliers here} \cdot \text{Outliers there}}{\text{Variation}} = \frac{n}{\sum w_{i,j}} \cdot \frac{\sum w_{i,j}(x_i-\bar{x})(x_j-\bar{x})}{\sum(x_i-\bar{x})^2}
+\end{equation}
+
+Where $x$ is our only variable, $\bar{x}$ is still the mean of $x$,
+$n$ is our number of data points, $w$ is a matrix (table) of
+\emph{spatial weights} among the points and has dimensions $i$ (rows)
+and $j$ (columns) each corresponding to a particular observation of
+$x$ such that it has $n$ columns and $n$ rows. The spatial weights,
+$w$, are directly proportional to the \emph{distances} among points:
+closer points are weighted higher (you can decide how much higher; see
+GLS below). Thus Moran's I is just the same, really, as a Pearson's
+correlation coefficient, only now instead of looking to see whether
+outliers in $x$ and $y$ are correlated, we're looking to see whether
+outliers in $x$ are in roughly the same area in space. In order to
+bring that concept of space into this, we need to weight our points
+according to how close they are, as otherwise we would simply be
+asking how correlated all points within a variable are with each
+other, which isn't useful for our purposes\footnote{Indeed, it would
+  just be the \emph{variance} of $x$}. There are two (equally fine)
+way to view the standardization term $\frac{n}{\sum w_{i,j}}$ in all
+of this: you can view it as dividing through by
+$\frac{\sum w_{i,j}}{n}$, in which case it's part of the
+\emph{variance} component (take the overall variation in the weights
+matrix given how many points we have), or you can view it as you
+viewed the degrees of freedom in $F$-ratios, in which case we're
+(again) controlling for how many observations we have and also where
+they are in space. Either is fine.
+
+Moran's I values can be compared with an expected distribution of
+Moran's I values if there were no aggregation of similar values across
+space in exactly the same way as any other test statistics. It's quite
+common to generate a null distribution of I values through some kind
+of simulation procedure, however, because there's a dependence on the
+locations of your data points in space that can be tricky to solve
+analytically. Either way, the end result is the same: you get a
+distribution of expected Moran's I values, and you compare your
+observed value with that to find out what fraction of the distribution
+is greater than your observation\footnote{If you have ever taken a
+  course in bootstrapping, you might be a bit concerned that I've
+  glossed over quite a lot of details about how to compare an observed
+  value to a bootstrapped distribution. Yet you might also note that,
+  from the definitions of frequentist distributions I gave you earlier
+  in the class, frequentists treat probability as a set of
+  observations in the long-run and so there's no difference really
+  between bootstrapping and analytical expectations. If you haven't
+  taken a class in bootstrapping, move on! Nothing to see
+  here...}. Note that you can also have spatial disaggregation: values
+of Moran's I that are less than $0$ and reflect points that are close
+to one-another in space being different from each other.
+
+\section{Accounting for spatial autocorrelation}
+Imagine you've calculated Moran's I and it appears to be significantly
+different from zero: you've got spatial autocorrelation of some
+kind. Or, perhaps, you have a strong \emph{a priori} reason to suppose
+you've got spatial autocorrelation and you don't want to test for it
+because you know it's there\footnote{Good for you! You have been
+  paying attention!}. What now? There is a huge body of literature
+devoted to modeling spatial data, and I'm going to present to you two
+reasonably straightforward methods for dealing with it. If you are
+interested, I cannot recommend Dormann \emph{et al.} (2007) in
+\emph{Ecography} highly enough. It's showing its age (it tests its
+models on a Pentium 4!), but the general concepts involved really
+haven't changed that much with the exception of recent focuses on
+Wavelet and spatial point-pattern analysis\footnote{Which really,
+  truly are beyond the scope of this course, but I can point you in
+  the direction of good introductions if you are interested.}.
+
+\subsection{Simultaneous AutoRegressive models}
+\emph{Simultaneous AutoRegressive} models (SARs) are generalizations
+of the autoregressive models we met last time in a temporal
+context. The ``simultaneous'' component here accounts for the fact
+that we can regress the data against nearby values of the response
+variable, the explanatory variable, or both during model-fitting. You
+pick between those options depending on the kind of autocorrelation
+problem you think, or test to find, that you have. If you think the
+underlying variable that is driving the autocorrelation is in the
+explanatory variable (\emph{e.g.}, temperature is driving mood but
+temperature is spatially autocorrelated) then you would regress your
+data against nearby temperature values. If you think it's in the
+response variable, (\emph{e.g.}, happy people make others around them
+happy), then you might regress against nearby response variables. If
+you're not sure... Go for both.
+
+\subsection{Generalized Least Squares}
+We met \emph{Generalized Least Squares} (GLS) models last time as a way to
+flexibly add any kind of ARIMA structure into a model. The good news
+is they can work in exactly the same way for spatial data. Where this
+can be useful is if you found the decision about what kind of SAR
+error structure to fit uncomfortable in the last section: with GLS,
+you have a bit more flexibility, and can also have autocorrelation in
+your \emph{error} component. This is analogous to the decision we made
+in the time series session about whether we wanted to account for
+autocorrelation of the response variable (autoregressive models) or
+the error underlying the response variable (moving average models),
+although the specifics are a little different.
+
+To work with GLS models, you need to specify the functional form of
+the autocorrelation you think is driving your data. For example, do
+you think there's an exponential (decaying) effect of space, where
+nearby points matter a lot and far away points matter very little?
+Then you can specify an \emph{exponential} model of the form
+$e^{-\frac{a}{d}}$, where $e$ is the exponential function, $d$ is the
+\emph{distance} among points, and $a$ is an estimated parameter that
+determines how fast the influence of nearby points decays. This is
+exactly analogous to the moving average models from last time, only
+now instead of an order (first, second, third, etc.) determining how
+many timesteps we ``listen'' to from earlier in the time series, now
+we have a continuous $d$istance and an amount we listen (the
+exponential function with its slope determined by $a$).
+
+\section{Hands on with spatial data in \R}
+I'm not going to sugar-coat it: the hardest part of spatial analysis
+in \R is the actual \R. For lots of very good computational
+reasons\footnote{Most of which involve the fact that you have to work
+  with spatial distance matrices, because matrices tend to take up
+  lots of memory and are slow to manipulate} spatial analysis in \R
+can be a real pain. So please view what follows as a cookbook: when
+you come to having to do your own spatial analysis in \R, take these
+instructions and modify them to suit your own purposes.
+
+First off, as always, I'm going to simulate some data. This requires
+the use of a rather fancy package to generate spatially-autocorrelated
+errors. I'm happy to give a very cursory introduction to how the
+package works if you're interested, but please just treat it as a
+magic black box unless you're willing to (1) take a serious class in
+spatial analysis\footnote{...and I do mean a \emph{serious} class in
+  spatial analysis} or (2) read the vignette of the package
+carefully. I'm constrained in this class by how much I can teach in
+half a semester: using the analysis tools I'm teaching you in a real
+analysis is fine, but using these simulation tools without
+understanding them more deeply could lead to Very Bad Things.
+
+\begin{minted}{splus}
+  library(RandomFields)
+  locations <- expand.grid(seq(-1,1,.1), seq(-1,1,.1))
+  error <- matrix(RFsimulate(
+      RMexp(), x=locations[,1], y=locations[,2])@data[,1],
+    nrow=length(unique(locations[,1])),
+    byrow=TRUE)
+  temperature <- matrix(RFsimulate(
+      RMexp(), x=locations[,1], y=locations[,2])@data[,1],
+    nrow=length(unique(locations[,1])),
+    byrow=TRUE)
+  data <- data.frame(
+    error=as.numeric(error), temperature=as.numeric(temperature),
+    y=as.numeric(row(error)), x=as.numeric(col(error))
+    )
+  data$mood <- with(data, 3 + temperature*.5 + error)
+\end{minted}%$
+
+We now have a \texttt{data.frame}, called \texttt{data}, that contains
+some information about people's average \texttt{mood}s through space
+as a function of \texttt{temperature}. In our simulated data people
+are strange, and seem to prefer a warmer environment. OK, so how do we
+go about telling \R that we have spatial data, and then how do we use
+Moran's I to test whether there's spatial autocorrelation in this
+dataset?
+
+\begin{minted}{splus}
+  # Load a useful package
+  library(spdep)
+  # Copy our data
+  sp.data <- data
+  # Tell R our new data structure is spatial
+  coordinates(sp.data) <- ~x+y
+  # Build a spatial weight matrix
+  neighbors <- knn2nb(knearneigh(sp.data, k=8))
+  weights <- nb2listw(neighbors)
+  moran.test(data$mood, weights)
+  # For good measure, check our residuals for autocorrelation
+  naive.model <- lm(mood ~ temperature, data=data)
+  moran.test(residuals(naive.model), weights)
+  # ...and this has the consequence that our coefficients are wrong
+  summary(naive.model)
+  # ... the slope should be 0.5 and the intercept 3
+\end{minted}%$
+
+A few things about what \R is doing ``behind the scenes'' here. By
+giving (one) of our datasets \texttt{coordinates}, we're implicitly
+telling \R to create a spatial data object for us. This is, for
+reasons I alluded to above, a quite tricky thing to do, and if you
+have a very large dataset then make sure you have a very large
+computer. Second, we build our weights matrix using (in this case) the
+eight nearest neighbors of each point. \R can do a lot with that, and
+it might surprise you that this is enough to detect autocorrelation:
+you can use more neighbors if you want, but remember that the
+importance of space tails off with distance and setting this number
+too high can take up a \emph{lot} of memory very quickly.
+
+Most importantly, from the perspective of the statistics, we can see
+that both our response variable and our residuals in our model show
+spatial autocorrelation. This is a problem: it means our data, and our
+inferences from that data, are pseudoreplicated, and so we need to
+account for this in our model. So let's fit an SAR model to account
+for this:
+
+\begin{minted}{splus}
+  # Fit the model
+  sar.model <- errorsarlm(mood ~ temperature, data=data, weights)
+  # Check the output (it's correct!)
+  summary(sar.model)
+  # Check for residual autocorrelation (there's none!)
+  moran.test(residuals(sar.model), weights)
+\end{minted}
+
+Voil\'{a}! We've managed to get the correct parameter estimates out of
+our model, and removed the residual autocorrelation from our model,
+all with a SAR model. This particular kind of model only accounts for
+autocorrelation in our errors, but this was still sufficient to get
+accurate parameter estimates despite me simulating my explanatory
+variable and my errors to have spatial autocorrelation. So the
+take-home from this is not to worry too much if you don't know what
+kind of SAR model to fit: one with autocorrelation in the errors is
+normally sufficient. Let's move onto a GLS model to see how we fare
+there...
+
+\begin{minted}{splus}
+  # Load the package
+  library(nlme)
+  # Fit the model (note we're using sp.data now)
+  gls <- gls(mood ~ temperature, data=sp.data, corr=corExp())
+  # Check the output - it's correct!
+  # - p-values are rounded so "0" means "very small"
+  summary(gls)
+  # Check for residual autocorrelation (there's none!)
+  moran.test(residuals(gls), weights)
+\end{minted}
+
+The nice thing about the GLS is we have a lot of flexibility about the
+form of the autocorrelation we think is going on---there are many
+options beyond \texttt{corExp} for exponential decay. The downside of
+this flexibility is it can be mind-numbingly slow to fit a model. Even
+in this reasonably small test-case, it took a very long time. There
+are other packages that offer spatial GLS regression, and many of
+those are much faster, but there is an advantage to having
+\texttt{nlme::gls} in your back-pocket: it can fit mixed effects
+models. Such models can be fit in Bayesian land, and there are plenty
+of tutorials for \texttt{stan} and \texttt{BUGS} out
+there\footnote{JAGS is not so spatial-friendly, sorry!}, but perhaps
+we can talk about those some other time.
+
+\section{Coda: space isn't always time, and a statistical fix isn't always the right answer}
+I can't leave you without mentioning something that crops up a lot in
+my field: the modeling of space as if it were evolutionary time. A
+long time ago, in a galaxy far, far away, someone thought it would be
+a very good idea to account for correlation through time on a
+phylogenetic tree as if it were correlation through space [see
+Diniz‐Filho \emph{et al.} (1998) in Evolution]. It was a very good
+idea, and under some circumstances it can be useful\footnote{See, for
+  example, a paper I thought I would hate being involved with but that
+  actually changed my mind on a lot of these eigenvector approaches;
+  Morales‐Castilla \emph{et al.} (2017) in Global Ecology and
+  Biogeography.}, but in general it is absolutely not a good
+idea. This was definitively shown quite some time ago [see Freckleton
+\emph{et al.} (2011) in The American Naturalist], but every now and
+again someone chances upon the idea of using some sort of spatial
+method in a new context. If you are going to use spatial methods for
+something that isn't space, do make sure they're mathematically simple
+to describe\footnote{A single equation, with a handful of parameters,
+  for the correlation structure.}, or else you will end up
+over-engineering something.
+
+Equally, and I might add that this applies to everything I have taught
+you in this course, do remember that \emph{a statistical fix is no
+  substitute for biological insight}. There are very few, if any,
+cases where having all of the important variables that drive a system
+in a model will go wrong in a straight-forward multiple regression of
+the type you learned in lecture 4. Everything else, from hierarchical
+models to spatial autocorrelation, is only needed if you don't have
+all the right information to hand. A good example of this is the
+Mantel test in spatial statistics, which I have deliberately not
+taught you because it can so easily lead to problems in spatial
+analyses [see Legendre \emph{et al.} (2015) in Methods in Ecology \&
+Evolution---the answer to the title of their paper is
+``no'']. Anything that ``cancels out'' or ``controls for'' something
+inevitably means that there is some process that is being
+ignored. Modeling spatial autocorrelation with a specific
+autoregressive or GLS function is not ``canceling out'' the
+autocorrelation, it's measuring its impact. An even better thing to
+do, of course, would be to find out what is \emph{driving} that
+autocorrelation and measure it.
+
+\section{Exercises}
+As ever, below is some code to load today's dataset into \R, and do a
+few modifications to it. This dataset is a little different, in that
+it's loaded into your \R session by the code you're going to execute
+below. This code is very useful, not just because the dataset is
+useful, but also because it shows you how to extract information about
+particular points on the Earth's surface (in this case random ones). I
+can assure you that there will come a day when you will be very
+grateful for remembering this exercise...
+
+\begin{minted}{splus}
+  library(raster)
+  r <- getData("worldclim",var="bio",res=10)
+  points <- data.frame(expand.grid(seq(0,50), seq(-50,-150)))
+  names(points) <- c("lat", "long")
+  sp.points <- points
+  coordinates(sp.points) <- ~long+lat
+  data <- data.frame(extract(r, sp.points))
+  names(data) <- c("temp.mean","diurnal.range", "isothermality",
+    "temp.season","max.temp","min.temp","temp.range","temp.wettest",
+    "temp.driest","temp.mean.warmest","temp.mean.coldest","precip",
+    "precip.wettest","precip.driest","precip.season","precip.wettest",
+    "precip.driest","precip.warmest","precip.coldest")
+  data$lat <- points$lat
+  data$long <- points$long
+  data <- na.omit(data)
+\end{minted}
+
+\begin{enumerate}
+\item Today's dataset is of global weather/climate conditions in
+  roughly the present day. The code above shows you how to download
+  that, and then extract information about these environmental
+  variables at a set of points on the Earth's surface. You can adapt
+  this code to study some particular points you're interested in if
+  you wish!
+  \begin{enumerate}
+  \item Regress two of the environmental variables against one-another
+    in a standard regression. What does it show?
+  \item Is there significant spatial autocorrelation in either
+    variable or the model residuals?
+  \item Use either GLS regression or SAR regression to account for
+    potential biases in the data. What does this show?
+  \end{enumerate}
+
+\item Today's code challenge is all about making it easier for you to
+  grab climate information for any point on the planet's surface. Do
+  pay attention to the code I have given you above...
+\end{enumerate}
+\begin{minted}{splus}
+  grab.cliamte <- function(lat, long){
+    raster <- getData(____, var="bio", res=10)
+    points <- data.frame(lat=___, long=___)
+    coordinates(____) <- ___ ___ ___ ___
+    return(____(____, points))
+  }
+\end{minted}
