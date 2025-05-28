@@ -14,7 +14,7 @@ title: "Temporal & Spatial Modelling of Disease Vectors"
 
 # Getting Started
 
-[This walkthrough is based on the [first vignette](https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html) for biomod2.]{.mark}
+This walkthrough is based on the [first vignette](https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html) for biomod2.
 
 We'll start by loading the libraries to carry out the work. Alongside biomod2, we'll use several libraries to help us load the data:
 
@@ -74,8 +74,6 @@ pipistrellus_data <- BIOMOD_FormatingData(resp.var = train_data,
                                     filter.raster = T)
 ```
 
-
-
 ```{r, output = F}
 pipistrellus_model <- BIOMOD_Modeling(bm.format = pipistrellus_data,
                                     modeling.id = 'GAM',
@@ -92,7 +90,6 @@ all_data_models <- get_built_models(pipistrellus_model, PA = "allData")
 bm_PlotResponseCurves(pipistrellus_model, models = all_data_models)
 
 ```
-
 
 ```{r}
 
@@ -122,6 +119,7 @@ pipistrelle_rangesize_change <- BIOMOD_RangeSize(proj.current = current_projecti
 
 plot(pipistrelle_rangesize_change$Diff.By.Pixel[[4]])
 ```
+
 # Resources
 
 ## Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)
