@@ -1,6 +1,41 @@
 ---
 title: "VBD Hub Training"
-image: Logos/Logo_NoBackground.png
 ---
 
 # Key Outcomes
+
+1.  Understand how to perform spatial and temporal analyses in R
+
+2.  Explore the *`biomod2`* package
+
+3.  Apply models to predict vector species distributions
+
+# Presentation
+
+# Getting Started
+
+```{r output=FALSE}
+library(tidyverse)
+library(biomod2)
+x=1:10
+y=1:10
+ggplot()+geom_point(aes(x=x,y=y))
+```
+
+# Resources
+
+## Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)
+
+-   [Main Paper](resources/Araujo_et_al_2019.pdf)
+
+-   [Supplementary Material](resources/Araujo_et_al_2019-SM.pdf)
+
+-   [Standards Table](resources/Ranking_Table.pdf)
+
+## Instructors
+
+-   Dr Will Pearse (Imperial) - [Website](https://pearselab.com/)
+
+-   Dr Josh Tyler (Alan Turing Institute) - [Website](https://jtyler13.github.io/)
+
+-   Nathan Clark (Imperial)

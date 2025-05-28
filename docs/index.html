@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -105,6 +139,13 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#key-outcomes" id="toc-key-outcomes" class="nav-link active" data-scroll-target="#key-outcomes">Key Outcomes</a></li>
+  <li><a href="#presentation" id="toc-presentation" class="nav-link" data-scroll-target="#presentation">Presentation</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a>
+  <ul class="collapse">
+  <li><a href="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" id="toc-standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="nav-link" data-scroll-target="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</a></li>
+  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">Instructors</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -132,8 +173,45 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="key-outcomes" class="level1">
 <h1>Key Outcomes</h1>
+<ol type="1">
+<li><p>Understand how to perform spatial and temporal analyses in R</p></li>
+<li><p>Explore the <em><code>biomod2</code></em> package</p></li>
+<li><p>Apply models to predict vector species distributions</p></li>
+</ol>
+</section>
+<section id="presentation" class="level1">
+<h1>Presentation</h1>
+</section>
+<section id="getting-started" class="level1">
+<h1>Getting Started</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomod2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>y<span class="ot">=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span><span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>x,<span class="at">y=</span>y))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="resources" class="level1">
+<h1>Resources</h1>
+<section id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="level2">
+<h2 class="anchored" data-anchor-id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</h2>
+<ul>
+<li><p><a href="resources/Araujo_et_al_2019.pdf">Main Paper</a></p></li>
+<li><p><a href="resources/Araujo_et_al_2019-SM.pdf">Supplementary Material</a></p></li>
+<li><p><a href="resources/Ranking_Table.pdf">Standards Table</a></p></li>
+</ul>
+</section>
+<section id="instructors" class="level2">
+<h2 class="anchored" data-anchor-id="instructors">Instructors</h2>
+<ul>
+<li><p>Dr Will Pearse (Imperial) - <a href="https://pearselab.com/">Website</a></p></li>
+<li><p>Dr Josh Tyler (Alan Turing Institute) - <a href="https://jtyler13.github.io/">Website</a></p></li>
+<li><p>Nathan Clark (Imperial)</p></li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
