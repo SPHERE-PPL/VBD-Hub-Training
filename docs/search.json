@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Temporal & Spatial Modelling of Disease Vectors",
     "section": "",
-    "text": "Understand how to perform spatial and temporal analyses in R\nUnderstand best practices within biodiversity modelling through standardised framework\nExplore the biomod2 & terra packages\nApply models to predict vector species distributions"
+    "text": "Understand how to perform spatial and temporal analyses in R\nExplore the biomod2 package\nApply models to predict vector species distributions"
   },
   {
     "objectID": "index.html#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances",
@@ -21,11 +21,18 @@
     "text": "Presentation"
   },
   {
-    "objectID": "index.html#spatial-analysis-and-autocorrelation",
-    "href": "index.html#spatial-analysis-and-autocorrelation",
+    "objectID": "index.html#lecture-notes",
+    "href": "index.html#lecture-notes",
     "title": "Temporal & Spatial Modelling of Disease Vectors",
-    "section": "Spatial Analysis and Autocorrelation",
-    "text": "Spatial Analysis and Autocorrelation\n\nSee these lecture notes"
+    "section": "Lecture Notes",
+    "text": "Lecture Notes\n\nSpatial Analysis and Autocorrelation"
+  },
+  {
+    "objectID": "index.html#instructors",
+    "href": "index.html#instructors",
+    "title": "Temporal & Spatial Modelling of Disease Vectors",
+    "section": "Instructors",
+    "text": "Instructors\n\nDr Will Pearse (Imperial) - Website\nDr Josh Tyler (Alan Turing Institute) - Website\nNathan Clark (Imperial)"
   },
   {
     "objectID": "resources/spatial.html",
