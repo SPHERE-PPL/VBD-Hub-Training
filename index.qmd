@@ -6,21 +6,13 @@ title: "Temporal & Spatial Modelling of Disease Vectors"
 
 1.  Understand how to perform spatial and temporal analyses in R
 
-2.  Explore the *`biomod2`* package
+2.  Understand best practices within biodiversity modelling through standardised framework
 
-3.  Apply models to predict vector species distributions
+3.  Explore the *`biomod2`* & `terra` packages
 
-# Presentation
+4.  Apply models to predict vector species distributions
 
 # Getting Started
-
-```{r output=FALSE}
-library(tidyverse)
-library(biomod2)
-x=1:10
-y=1:10
-ggplot()+geom_point(aes(x=x,y=y))
-```
 
 # Resources
 
@@ -32,7 +24,12 @@ ggplot()+geom_point(aes(x=x,y=y))
 
 -   [Standards Table](resources/Ranking_Table.pdf)
 
-## Instructors
+## Presentation
+
+## Spatial Analysis and Autocorrelation
+-   [See these lecture notes](resources/spatial.qmd)
+
+# Instructors
 
 -   Dr Will Pearse (Imperial) - [Website](https://pearselab.com/)
 

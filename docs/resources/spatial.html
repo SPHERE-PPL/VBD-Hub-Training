@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Temporal &amp; Spatial Modelling of Disease Vectors – SPHERE-PPL</title>
+<title>Spatial Analysis and Autocorrelation – SPHERE-PPL</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,25 +23,25 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./Logos/Logo_NoText.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../Logos/Logo_NoText.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -80,10 +109,10 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./Logos/Logo_NoText.png" alt="" class="navbar-logo">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../Logos/Logo_NoText.png" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">SPHERE-PPL - VBD-HUB Training</span>
     </a>
   </div>
@@ -104,15 +133,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-outcomes" id="toc-key-outcomes" class="nav-link active" data-scroll-target="#key-outcomes">Key Outcomes</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
-  <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#detecting-spatial-autocorrelation" id="toc-detecting-spatial-autocorrelation" class="nav-link" data-scroll-target="#detecting-spatial-autocorrelation">Detecting Spatial Autocorrelation</a></li>
+  <li><a href="#accounting-for-spatial-autocorrelation" id="toc-accounting-for-spatial-autocorrelation" class="nav-link" data-scroll-target="#accounting-for-spatial-autocorrelation">Accounting for Spatial Autocorrelation</a>
   <ul class="collapse">
-  <li><a href="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" id="toc-standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="nav-link" data-scroll-target="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</a></li>
-  <li><a href="#presentation" id="toc-presentation" class="nav-link" data-scroll-target="#presentation">Presentation</a></li>
-  <li><a href="#spatial-analysis-and-autocorrelation" id="toc-spatial-analysis-and-autocorrelation" class="nav-link" data-scroll-target="#spatial-analysis-and-autocorrelation">Spatial Analysis and Autocorrelation</a></li>
+  <li><a href="#simultaneous-autoregressive-models" id="toc-simultaneous-autoregressive-models" class="nav-link" data-scroll-target="#simultaneous-autoregressive-models">Simultaneous AutoRegressive Models</a></li>
+  <li><a href="#generalised-least-squares" id="toc-generalised-least-squares" class="nav-link" data-scroll-target="#generalised-least-squares">Generalised Least Squares</a></li>
   </ul></li>
-  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">Instructors</a></li>
+  <li><a href="#coda-space-isnt-always-time-and-a-statistical-fix-isnt-always-the-right-answer" id="toc-coda-space-isnt-always-time-and-a-statistical-fix-isnt-always-the-right-answer" class="nav-link" data-scroll-target="#coda-space-isnt-always-time-and-a-statistical-fix-isnt-always-the-right-answer">Coda: Space isn’t always time, and a statistical fix isn’t always the right answer</a></li>
   </ul>
 </nav>
     </div>
@@ -121,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Temporal &amp; Spatial Modelling of Disease Vectors</h1>
+<h1 class="title">Spatial Analysis and Autocorrelation</h1>
 </div>
 
 
@@ -138,50 +166,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="key-outcomes" class="level1">
-<h1>Key Outcomes</h1>
-<ol type="1">
-<li><p>Understand how to perform spatial and temporal analyses in R</p></li>
-<li><p>Understand best practices within biodiversity modelling through standardised framework</p></li>
-<li><p>Explore the <em><code>biomod2</code></em> &amp; <code>terra</code> packages</p></li>
-<li><p>Apply models to predict vector species distributions</p></li>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>As with time series analysis, it can be difficult to think of how we could collect data <strong>outside</strong> of space, so perhaps it’s best to think of these techniques as important for data where your explanatory variables change across space. We will only be covering two-dimensional space in this lecture series, and it is very rare for biologists (or really any scientists) to need to control for spatial autocorrelation in a three-dimensional setting. Typically, if you have variation in height (elevation) in your data, this is fitted as an explanatory variable. Perhaps the only exception to this in a biological setting is marine data, and while I have only rarely seen studies of pelagic data that need to account for all three dimensions, in such cases the extension of these techniques (if not these precise packages) to such data is trivial. To begin with, we’re going to extend the classic concept of correlation to account for <strong>spatial</strong> autocorrelation, which will give us a way to detect whether spatial autocorrelation exists in our datasets. We’ll then cover two common methods for working with spatial data (autoregressive models and Generalized Least Squares (GLS) models), and then finish up with some hands-on experience working with spatial data.</p>
+</section>
+<section id="detecting-spatial-autocorrelation" class="level2">
+<h2 class="anchored" data-anchor-id="detecting-spatial-autocorrelation">Detecting Spatial Autocorrelation</h2>
+<p>While we have spent a great deal of time in this course talking about the square of the correlation coefficient (<span class="math inline">\(r^2\)</span>), but we have not considered its square-root in much detail. You have encountered the <strong>correlation coefficient</strong> in previous statistical classes, but let’s review it here as we can detect spatial autocorrelation using an extension of it. The correlation coefficient, <span class="math inline">\(r\)</span>, measures whether or not two vectors of data are correlated. There are many different definitions of it but, importantly, the <strong>Pearson’s correlation coefficient</strong> we are focusing on today doesn’t care which of them is the response or explanatory variable—they’re all the same to it. It is defined as:</p>
+<p><span class="math display">\[
+r = \frac{\text{Outliers in x} \cdot \text{Outliers in y}}{\text{Variance in x and y}} = \frac{\sum((x - \bar{x})(y-\bar{y}))}{\sqrt{\sum(x-\bar{x})^2}\sqrt{\sum(y-\bar{y})^2}}
+\]</span></p>
+<p>Where <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are the two variables we are testing for correlation, and <span class="math inline">\(\bar{x}\)</span> and <span class="math inline">\(\bar{y}\)</span> are the means of these two variables. The idea of a correlation test is to see whether values that are greater than the mean in one variable are paired with values that are above or below the mean in the other variable (that’s our <strong>observation</strong>, and our <strong>expectation</strong> is they’re not), in the context of how much background <strong>variation</strong> there is in the two variables<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. If there were lots of unusually large values in <span class="math inline">\(x\)</span> that were paired with unusually low values in <span class="math inline">\(y\)</span>, we would tend to be multiplying lots of large positive values with lots of negative values, and would sum these up to get a very large negative value. This would be divided by the overall variation in the two variables, and we would get a negative number that was close to <span class="math inline">\(-1\)</span>. The correlation coefficient can only range between <span class="math inline">\(-1\)</span> and <span class="math inline">\(+1\)</span>: values closer to <span class="math inline">\(-1\)</span> mean there is a <strong>negative</strong> correlation between the values, values closer to <span class="math inline">\(+1\)</span> mean a positive value, and values closer to <span class="math inline">\(0\)</span> tend to mean there’s little correlation between the variables.</p>
+<p>So how can we use this to measure the correlation of values <strong>in the same variable</strong> through space? Using something called <strong>Moran’s I</strong>, which is remarkably similar to a Pearson’s correlation coefficient, and is defined as:</p>
+<p><span class="math display">\[
+I = \text{How many things} \cdot \frac{\text{Outliers here} \cdot \text{Outliers there}}{\text{Variation}} = \frac{n}{\sum w_{i,j}} \cdot \frac{\sum w_{i,j}(x_i-\bar{x})(x_j-\bar{x})}{\sum(x_i-\bar{x})^2}
+\]</span></p>
+<p>Where <span class="math inline">\(x\)</span> is our only variable, <span class="math inline">\(\bar{x}\)</span> is still the mean of <span class="math inline">\(x\)</span>, <span class="math inline">\(n\)</span> is our number of data points, <span class="math inline">\(w\)</span> is a matrix (table) of <strong>spatial weights</strong> among the points and has dimensions <span class="math inline">\(i\)</span> (rows) and <span class="math inline">\(j\)</span> (columns) each corresponding to a particular observation of <span class="math inline">\(x\)</span> such that it has <span class="math inline">\(n\)</span> columns and <span class="math inline">\(n\)</span> rows. The spatial weights, <span class="math inline">\(w\)</span>, are directly proportional to the <strong>distances</strong> among points: closer points are weighted higher (you can decide how much higher; see GLS below). Thus Moran’s I is just the same, really, as a Pearson’s correlation coefficient, only now instead of looking to see whether outliers in <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> are correlated, we’re looking to see whether outliers in <span class="math inline">\(x\)</span> are in roughly the same area in space. In order to bring that concept of space into this, we need to weight our points according to how close they are, as otherwise we would simply be asking how correlated all points within a variable are with each other, which isn’t useful for our purposes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. There are two (equally fine) way to view the standardization term <span class="math inline">\(\frac{n}{\sum w_{i,j}}\)</span> in all of this: you can view it as dividing through by <span class="math inline">\(\frac{\sum w_{i,j}}{n}\)</span>, in which case it’s part of the <strong>variance</strong> component (take the overall variation in the weights matrix given how many points we have), or you can view it as you viewed the degrees of freedom in <span class="math inline">\(F\)</span>-ratios, in which case we’re (again) controlling for how many observations we have and also where they are in space. Either is fine.</p>
+<p>Moran’s I values can be compared with an expected distribution of Moran’s I values if there were no aggregation of similar values across space in exactly the same way as any other test statistics. It’s quite common to generate a null distribution of I values through some kind of simulation procedure, however, because there’s a dependence on the locations of your data points in space that can be tricky to solve analytically. Either way, the end result is the same: you get a distribution of expected Moran’s I values, and you compare your observed value with that to find out what fraction of the distribution is greater than your observation<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Note that you can also have spatial disaggregation: values of Moran’s I that are less than <span class="math inline">\(0\)</span> and reflect points that are close to one-another in space being different from each other.</p>
+</section>
+<section id="accounting-for-spatial-autocorrelation" class="level2">
+<h2 class="anchored" data-anchor-id="accounting-for-spatial-autocorrelation">Accounting for Spatial Autocorrelation</h2>
+<p>Imagine you’ve calculated Moran’s I and it appears to be significantly different from zero: you’ve got spatial autocorrelation of some kind. Or, perhaps, you have a strong <strong>a priori</strong> reason to suppose you’ve got spatial autocorrelation and you don’t want to test for it because you know it’s there<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. What now? There is a huge body of literature devoted to modeling spatial data, and I’m going to present to you two reasonably straightforward methods for dealing with it. If you are interested, I cannot recommend Dormann <em>et al.</em> (2007) in <em>Ecography</em> highly enough. It’s showing its age (it tests its models on a Pentium 4!), but the general concepts involved really haven’t changed that much with the exception of recent focuses on Wavelet and spatial point-pattern analysis<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
+<section id="simultaneous-autoregressive-models" class="level3">
+<h3 class="anchored" data-anchor-id="simultaneous-autoregressive-models">Simultaneous AutoRegressive Models</h3>
+<p><strong>Simultaneous AutoRegressive</strong> models (SARs) are generalizations of the autoregressive models we met last time in a temporal context. The ``simultaneous’’ component here accounts for the fact that we can regress the data against nearby values of the response variable, the explanatory variable, or both during model-fitting. You pick between those options depending on the kind of autocorrelation problem you think, or test to find, that you have. If you think the underlying variable that is driving the autocorrelation is in the explanatory variable (<em>e.g.</em>, temperature is driving mood but temperature is spatially autocorrelated) then you would regress your data against nearby temperature values. If you think it’s in the response variable, (<em>e.g</em>., happy people make others around them happy), then you might regress against nearby response variables. If you’re not sure… Go for both.</p>
+</section>
+<section id="generalised-least-squares" class="level3">
+<h3 class="anchored" data-anchor-id="generalised-least-squares">Generalised Least Squares</h3>
+<p>We met <strong>Generalized Least Squares</strong> (GLS) models last time as a way to flexibly add any kind of ARIMA structure into a model. The good news is they can work in exactly the same way for spatial data. Where this can be useful is if you found the decision about what kind of SAR error structure to fit uncomfortable in the last section: with GLS, you have a bit more flexibility, and can also have autocorrelation in your <em>error</em> component. This is analogous to the decision we made in the time series session about whether we wanted to account for autocorrelation of the response variable (autoregressive models) or the error underlying the response variable (moving average models), although the specifics are a little different.</p>
+<p>To work with GLS models, you need to specify the functional form of the autocorrelation you think is driving your data. For example, do you think there’s an exponential (decaying) effect of space, where nearby points matter a lot and far away points matter very little? Then you can specify an <em>exponential</em> model of the form <span class="math inline">\(e^{-\frac{a}{d}}\)</span>, where <span class="math inline">\(e\)</span> is the exponential function, <span class="math inline">\(d\)</span> is the <em>distance</em> among points, and <span class="math inline">\(a\)</span> is an estimated parameter that determines how fast the influence of nearby points decays. This is exactly analogous to the moving average models from last time, only now instead of an order (first, second, third, etc.) determining how many timesteps we ``listen’’ to from earlier in the time series, now we have a continuous <span class="math inline">\(d\)</span>istance and an amount we listen (the exponential function with its slope determined by <span class="math inline">\(a\)</span>).</p>
+</section>
+</section>
+<section id="coda-space-isnt-always-time-and-a-statistical-fix-isnt-always-the-right-answer" class="level2">
+<h2 class="anchored" data-anchor-id="coda-space-isnt-always-time-and-a-statistical-fix-isnt-always-the-right-answer">Coda: Space isn’t always time, and a statistical fix isn’t always the right answer</h2>
+<p>I can’t leave you without mentioning something that crops up a lot in my field: the modeling of space as if it were evolutionary time. A long time ago, in a galaxy far, far away, someone thought it would be a very good idea to account for correlation through time on a phylogenetic tree as if it were correlation through space [see Diniz‐Filho <em>et al.</em> (1998) in Evolution]. It was a very good idea, and under some circumstances it can be useful<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, but in general it is absolutely not a good idea. This was definitively shown quite some time ago [see Freckleton <em>et al.</em> (2011) in The American Naturalist], but every now and again someone chances upon the idea of using some sort of spatial method in a new context. If you are going to use spatial methods for something that isn’t space, do make sure they’re mathematically simple to describe<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, or else you will end up over-engineering something.</p>
+<p>Equally, and I might add that this applies to everything I have taught you in this course, do remember that <strong>a statistical fix is no substitute for biological insight</strong>. There are very few, if any, cases where having all of the important variables that drive a system in a model will go wrong in a straight-forward multiple regression. Everything else, from hierarchical models to spatial autocorrelation, is only needed if you don’t have all the right information to hand. A good example of this is the Mantel test in spatial statistics, which I have deliberately not taught you because it can so easily lead to problems in spatial analyses [see Legendre <em>et al.</em> (2015) in Methods in Ecology &amp; Evolution—the answer to the title of their paper is no]. Anything that cancels “out’’ or”controls for’’ something inevitably means that there is some process that is being ignored. Modeling spatial autocorrelation with a specific autoregressive or GLS function is notcanceling out’’ the autocorrelation, it’s measuring its impact. An even better thing to do, of course, would be to find out what is <strong>driving</strong> that autocorrelation and measure it.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Surprise! It’s another test statistic!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Indeed, it would just be the variance of x.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>If you have ever taken a course in bootstrapping, you might be a bit concerned that I’ve glossed over quite a lot of details about how to compare an observed value to a bootstrapped distribution. Yet you might also note that, from the definitions of frequentist distributions I gave you earlier in the class, frequentists treat probability as a set of observations in the long-run and so there’s no difference really between bootstrapping and analytical expectations. If you haven’t taken a class in bootstrapping, move on! Nothing to see here…<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Good for you! You have been paying attention!<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Which really, truly are beyond the scope of this course, but I can point you in the direction of good introductions if you are interested.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>See, for example, a paper I thought I would hate being involved with but that actually changed my mind on a lot of these eigenvector approaches; Morales‐Castilla et al.&nbsp;(2017) in Global Ecology and Biogeography.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>A single equation, with a handful of parameters, for the correlation structure.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>
-<section id="getting-started" class="level1">
-<h1>Getting Started</h1>
-</section>
-<section id="resources" class="level1">
-<h1>Resources</h1>
-<section id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="level2">
-<h2 class="anchored" data-anchor-id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</h2>
-<ul>
-<li><p><a href="resources/Araujo_et_al_2019.pdf">Main Paper</a></p></li>
-<li><p><a href="resources/Araujo_et_al_2019-SM.pdf">Supplementary Material</a></p></li>
-<li><p><a href="resources/Ranking_Table.pdf">Standards Table</a></p></li>
-</ul>
-</section>
-<section id="presentation" class="level2">
-<h2 class="anchored" data-anchor-id="presentation">Presentation</h2>
-</section>
-<section id="spatial-analysis-and-autocorrelation" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-analysis-and-autocorrelation">Spatial Analysis and Autocorrelation</h2>
-<ul>
-<li><a href="./resources/spatial.html">See these lecture notes</a></li>
-</ul>
-</section>
-</section>
-<section id="instructors" class="level1">
-<h1>Instructors</h1>
-<ul>
-<li><p>Dr Will Pearse (Imperial) - <a href="https://pearselab.com/">Website</a></p></li>
-<li><p>Dr Josh Tyler (Alan Turing Institute) - <a href="https://jtyler13.github.io/">Website</a></p></li>
-<li><p>Nathan Clark (Imperial)</p></li>
-</ul>
-
-
-</section>
-
-</main> <!-- /main -->
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
