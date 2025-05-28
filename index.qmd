@@ -10,8 +10,6 @@ title: "Temporal & Spatial Modelling of Disease Vectors"
 
 3.  Apply models to predict vector species distributions
 
-# Presentation
-
 # Getting Started
 
 This walkthrough is based on the [first vignette](https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html) for biomod2.
@@ -41,7 +39,7 @@ europe_bioclim <- terra::crop(europe_bioclim, europe_extent)
 
 #Load in the bioclim projections from SSP 585:
 europe_bioclim_future <- cmip6_world(model = "ACCESS-CM2", ssp ="585", time = "2061-2080", var = "bioc", res = "10", path = ".")
-europe_bioclim_future <- terra::crop(EU_bio_future, EU_bio)
+europe_bioclim_future <- terra::crop(europe_bioclim_future, europe_bioclim)
 
 ```
 
@@ -129,6 +127,12 @@ plot(pipistrelle_rangesize_change$Diff.By.Pixel[[4]])
 -   [Supplementary Material](resources/Araujo_et_al_2019-SM.pdf)
 
 -   [Standards Table](resources/Ranking_Table.pdf)
+
+## Presentation
+
+## Lecture Notes
+
+-   [Spatial Analysis and Autocorrelation](resources/spatial.qmd)
 
 ## Instructors
 
