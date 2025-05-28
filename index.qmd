@@ -1,5 +1,5 @@
 ---
-title: "VBD Hub Training"
+title: "Temporal & Spatial Modelling of Disease Vectors"
 ---
 
 # Key Outcomes
