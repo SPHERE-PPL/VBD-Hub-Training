@@ -1,5 +1,7 @@
 ---
 title: "Temporal & Spatial Modelling of Disease Vectors"
+execute:
+  eval: false
 ---
 
 # Key Outcomes
