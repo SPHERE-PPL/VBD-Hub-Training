@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  bread-crumbs: true
+  favicon: Logos/Logo_NoText.png
+  title: "SPHERE-PPL"
+  navbar:
+    title: "SPHERE-PPL - VBD-HUB Training"
+    logo: Logos/Logo_NoText.png
+    tools:
+      - icon: github
+        href: https://github.com/SPHERE-PPL/VBD-Hub-Training
+        
+  page-footer:
+    border: true
+    left: Copyright 2025 - SPHERE-PPL
+    right:
+      - text: "Spatial, Health & Environmental Research using Probilistic Programming Languages"
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    page-layout: article
