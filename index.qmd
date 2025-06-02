@@ -110,12 +110,16 @@ pipistrelle_rangesize_change <- BIOMOD_RangeSize(proj.current = current_projecti
                                     proj.future = future_projections)
 ```
 
-```{r output=FALSE}
+```{r}
 
 plot(current_projections$Pipistrellus.pipistrellus_allData_allRun_GAM)
 
 plot(pipistrelle_rangesize_change$Diff.By.Pixel[[4]])
 ```
+
+![Current Range Predictions](resources/Pip_fig1.png){fig-align="center"}
+
+![Comparison to Future Range Prediction](resources/Pip_fig2.png){fig-align="center"}
 
 # Resources
 
