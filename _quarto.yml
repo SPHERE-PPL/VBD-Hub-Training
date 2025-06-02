@@ -15,7 +15,8 @@ website:
     right:
       - href: index.qmd
         text: Home
-      - resources/biodiversity-modelling.qmd
+      - href: resources/biodiversity-modelling.qmd
+        text: Handout
       - resources/code-example.qmd
 
         

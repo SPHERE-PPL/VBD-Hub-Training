@@ -2,6 +2,10 @@
 title: "Temporal & Spatial Modelling of Disease Vectors"
 ---
 
+## Overview
+
+Welcome to the SPHERE-PPL training on Temporal & Spatial Modelling of Disease Vectors, first given at the VBD Hub Summer Workshop 2025. This page contains links to all of the material we will cover in the session and additional resources to supplement the learning!
+
 ## Key Outcomes
 
 1.  Understand how to perform spatial and temporal analyses in R

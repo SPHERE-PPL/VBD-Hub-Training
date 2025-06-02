@@ -1,10 +1,9 @@
 ---
-title: "Handout"
+title: "Spatial Analysis and Autocorrelation"
 editor: 
   markdown: 
     wrap: 72
 ---
-# Spatial Analysis and Autocorrelation
 ## Overview
 
 Modelling diseases is tough. You need to understand how they're
