@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -121,11 +87,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <span class="navbar-title">SPHERE-PPL - VBD-HUB Training</span>
     </a>
   </div>
-        <div class="quarto-navbar-tools tools-end">
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resources/biodiversity-modelling.html"> 
+<span class="menu-text">Handout</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./resources/code-example.html"> 
+<span class="menu-text">Getting Started Code</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
     <a href="https://github.com/SPHERE-PPL/VBD-Hub-Training" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
-          <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -139,14 +124,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#key-outcomes" id="toc-key-outcomes" class="nav-link active" data-scroll-target="#key-outcomes">Key Outcomes</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#lecture-notes" id="toc-lecture-notes" class="nav-link" data-scroll-target="#lecture-notes">Lecture Notes</a></li>
   <li><a href="#resources" id="toc-resources" class="nav-link" data-scroll-target="#resources">Resources</a>
   <ul class="collapse">
-  <li><a href="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" id="toc-standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="nav-link" data-scroll-target="#standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</a></li>
-  <li><a href="#presentation" id="toc-presentation" class="nav-link" data-scroll-target="#presentation">Presentation</a></li>
-  <li><a href="#lecture-notes" id="toc-lecture-notes" class="nav-link" data-scroll-target="#lecture-notes">Lecture Notes</a></li>
-  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">Instructors</a></li>
+  <li><a href="#papers" id="toc-papers" class="nav-link" data-scroll-target="#papers">Papers</a></li>
   </ul></li>
+  <li><a href="#instructors" id="toc-instructors" class="nav-link" data-scroll-target="#instructors">Instructors</a></li>
   </ul>
 </nav>
     </div>
@@ -172,140 +155,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="key-outcomes" class="level1">
-<h1>Key Outcomes</h1>
+<section id="key-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="key-outcomes">Key Outcomes</h2>
 <ol type="1">
 <li><p>Understand how to perform spatial and temporal analyses in R</p></li>
 <li><p>Explore the <em><code>biomod2</code></em> package</p></li>
 <li><p>Apply models to predict vector species distributions</p></li>
 </ol>
 </section>
-<section id="getting-started" class="level1">
-<h1>Getting Started</h1>
-<p>This walkthrough is based on the <a href="https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html">first vignette</a> for biomod2.</p>
-<p>We’ll start by loading the libraries to carry out the work. Alongside biomod2, we’ll use several libraries to help us load the data:</p>
+<section id="lecture-notes" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-notes">Lecture Notes</h2>
 <ul>
-<li><a href="https://github.com/rspatial/geodata">geodata</a>, which provides functions to download GBIF and environmental data dynamically.</li>
-<li><a href="https://www.tidyverse.org/">tidyverse</a>, which helps with general data-handling.</li>
-<li><a href="https://rspatial.github.io/terra/index.html">terra</a>, which has functions for manipulating raster files.</li>
+<li><p><a href="./resources/biodiversity-modelling.html">Handout</a></p></li>
+<li><p><a href="./resources/code-example.html">Getting Started Code</a></p></li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomod2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Let's grab the outlines of countries from a database:</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">returnclass =</span> <span class="st">"sv"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>europe_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">50</span>,<span class="dv">35</span>,<span class="dv">70</span>) <span class="co">#Rough coordinates for </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>europe_shapefile <span class="ot">&lt;-</span> <span class="fu">crop</span>(world, europe_extent)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Current bioclim variables</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> <span class="fu">worldclim_global</span>(<span class="at">res =</span> <span class="st">"10"</span>, <span class="at">var =</span> <span class="st">"bio"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim, europe_extent)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in the bioclim projections from SSP 585:</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> <span class="fu">cmip6_world</span>(<span class="at">model =</span> <span class="st">"ACCESS-CM2"</span>, <span class="at">ssp =</span><span class="st">"585"</span>, <span class="at">time =</span> <span class="st">"2061-2080"</span>, <span class="at">var =</span> <span class="st">"bioc"</span>, <span class="at">res =</span> <span class="st">"10"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim_future, europe_bioclim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>We then proceed to load data from GBIF for the common pipistrelle bat (Pipistrellus pipistrellus). There are <a href="https://www.gbif.org/occurrence/map?taxon_key=5218465">currently</a> 3,131,556 records of the pipistrelle bat in GBIF, but we’re only going to work with a subset of 100,000.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>genus_name <span class="ot">&lt;-</span> <span class="st">"Pipistrellus"</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="st">"pipistrellus"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>full_name <span class="ot">&lt;-</span> <span class="fu">paste</span>(genus_name, species_name, <span class="at">sep =</span> <span class="st">" "</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>europe_occurrences <span class="ot">&lt;-</span> <span class="fu">sp_occurrence</span>(genus_name, species_name, <span class="at">ext =</span> europe_extent, <span class="at">down =</span> T, <span class="at">removeZeros =</span> T, <span class="at">fixnames =</span> T, <span class="at">end =</span> <span class="dv">10000</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Separate out these records by longitude and latitude:</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>long_lats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(europe_occurrences<span class="sc">$</span>lon, europe_occurrences<span class="sc">$</span>lat))</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(long_lats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"long"</span>,<span class="st">"lat"</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#We're working with opportunistic sampling, so all our observations are positive. This means that we have to add in assumed-absences (pseudoabsences) amongst the axes of our regions. We've set there to be as many pseudoabsences as there are recorded positives.</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>pipistrellus_model <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Modeling</span>(<span class="at">bm.format =</span> pipistrellus_data,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">modeling.id =</span> <span class="st">'GAM'</span>,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">models =</span> <span class="st">"GAM"</span>,</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.strategy =</span> <span class="st">'kfold'</span>,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.k =</span> <span class="dv">5</span>,</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.nb.rep =</span> <span class="dv">3</span>,</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">#CV.perc = 0.8,</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">OPT.strategy =</span> <span class="st">'default'</span>,</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">var.import =</span> <span class="dv">3</span>,</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">metric.eval =</span> <span class="fu">c</span>(<span class="st">'TSS'</span>,<span class="st">'ROC'</span>))</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>all_data_models <span class="ot">&lt;-</span> <span class="fu">get_built_models</span>(pipistrellus_model, <span class="at">PA =</span> <span class="st">"allData"</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">bm_PlotResponseCurves</span>(pipistrellus_model, <span class="at">models =</span> all_data_models)</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(europe_bioclim_future) <span class="ot">&lt;-</span> <span class="fu">names</span>(europe_bioclim)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>pipistrellus_current <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">proj.name =</span> <span class="st">'Current'</span>,</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">new.env =</span> europe_bioclim,</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.binary =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.filter =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>pipistrellus_future <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">proj.name =</span> <span class="st">'Future'</span>,</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">new.env =</span> europe_bioclim_future,</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">metric.binary =</span> <span class="st">'TSS'</span>,</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>current_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_current, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>future_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_future, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>pipistrelle_rangesize_change <span class="ot">&lt;-</span> <span class="fu">BIOMOD_RangeSize</span>(<span class="at">proj.current =</span> current_projections, </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">proj.future =</span> future_projections)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(current_projections<span class="sc">$</span>Pipistrellus.pipistrellus_allData_allRun_GAM)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pipistrelle_rangesize_change<span class="sc">$</span>Diff.By.Pixel[[<span class="dv">4</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="resources/Pip_fig1.png" class="img-fluid figure-img"></p>
-<figcaption>Current Range Predictions</figcaption>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="resources/Pip_fig2.png" class="img-fluid figure-img"></p>
-<figcaption>Comparison to Future Range Prediction</figcaption>
-</figure>
-</div>
 </section>
-<section id="resources" class="level1">
-<h1>Resources</h1>
-<section id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances" class="level2">
-<h2 class="anchored" data-anchor-id="standards-for-distribution-models-in-biodiversity-assessments-araujo-et-al-2019---science-advances">Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</h2>
+<section id="resources" class="level2">
+<h2 class="anchored" data-anchor-id="resources">Resources</h2>
+<section id="papers" class="level3">
+<h3 class="anchored" data-anchor-id="papers">Papers</h3>
+<p><strong>Standards for distribution models in biodiversity assessments (Araujo et al 2019 - Science Advances)</strong></p>
 <ul>
 <li><p><a href="resources/Araujo_et_al_2019.pdf">Main Paper</a></p></li>
 <li><p><a href="resources/Araujo_et_al_2019-SM.pdf">Supplementary Material</a></p></li>
 <li><p><a href="resources/Ranking_Table.pdf">Standards Table</a></p></li>
 </ul>
+<p><strong>Phylogenetic Overdispersion in Floridian Oak Communities (Cavender-Bares et al 2004 - American Naturalist)</strong></p>
+<ul>
+<li><a href="resources/Cavender-Bares-2009.pdf">Paper</a></li>
+</ul>
+<p><strong>Niches and distributional areas: Concepts, methods, and assumptions (Soberon &amp; Nakamura - PNAS)</strong></p>
+<ul>
+<li><a href="resources/Soberón-2009.pdf">Paper</a></li>
+</ul>
 </section>
-<section id="presentation" class="level2">
-<h2 class="anchored" data-anchor-id="presentation">Presentation</h2>
-</section>
-<section id="lecture-notes" class="level2">
-<h2 class="anchored" data-anchor-id="lecture-notes">Lecture Notes</h2>
 </section>
 <section id="instructors" class="level2">
 <h2 class="anchored" data-anchor-id="instructors">Instructors</h2>
@@ -316,7 +199,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

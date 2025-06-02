@@ -12,6 +12,12 @@ website:
     tools:
       - icon: github
         href: https://github.com/SPHERE-PPL/VBD-Hub-Training
+    right:
+      - href: index.qmd
+        text: Home
+      - resources/biodiversity-modelling.qmd
+      - resources/code-example.qmd
+
         
   page-footer:
     border: true
