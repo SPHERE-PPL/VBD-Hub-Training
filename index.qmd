@@ -40,6 +40,14 @@ Welcome to the SPHERE-PPL training on Temporal & Spatial Modelling of Disease Ve
 
 -   [Paper](resources/Soberón-2009.pdf)
 
+### Lyme Disease Forecasting Contest
+
+-   [Getting Started](https://sphere-ppl.org/pages/Forecasting_Contests/)
+
+<!-- -->
+
+-   [Contest Repo](https://github.com/SPHERE-PPL/HFC-Lyme-Disease)
+
 ## Instructors
 
 -   Dr Will Pearse (Imperial) - [Website](https://pearselab.com/)
