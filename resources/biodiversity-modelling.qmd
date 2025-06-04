@@ -1,9 +1,12 @@
 ---
 title: "Spatial Analysis and Autocorrelation"
+execute:
+  eval: false
 editor: 
   markdown: 
     wrap: 72
 ---
+
 ## Overview
 
 Modelling diseases is tough. You need to understand how they're
