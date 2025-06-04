@@ -1,10 +1,12 @@
 ---
 title: "Spatial Analysis and Autocorrelation"
+format: pdf
 execute:
   eval: false
 editor: 
   markdown: 
     wrap: 72
+
 ---
 
 ## Overview
