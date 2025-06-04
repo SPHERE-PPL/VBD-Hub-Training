@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -142,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#distribution-models-are-like-regular-statistical-models-so-check-them-properly" id="toc-distribution-models-are-like-regular-statistical-models-so-check-them-properly" class="nav-link" data-scroll-target="#distribution-models-are-like-regular-statistical-models-so-check-them-properly">3.2 Distribution models are like regular statistical models so check them properly</a></li>
   </ul></li>
   </ul>
-</nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="biodiversity-modelling.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -199,6 +233,44 @@ ul.task-list li input[type="checkbox"] {
 <section id="putting-it-into-practice." class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-into-practice.">1.3 Putting it into practice.</h3>
 <p>Below is some code that loads data on the pipstrelle bat from GBIF into R. Run it and make sure you’re comfortable with it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Downloading species data</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(biomod2)){</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"biomod2"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(rnaturalearth)){</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(geodata)){</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"geodata"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(terra)){</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"terra"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomod2)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">returnclass =</span> <span class="st">"sv"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>europe_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">50</span>,<span class="dv">35</span>,<span class="dv">70</span>) <span class="co">#Rough coordinates for EU</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>europe_shapefile <span class="ot">&lt;-</span> <span class="fu">crop</span>(world, europe_extent)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>genus_name <span class="ot">&lt;-</span> <span class="st">"Pipistrellus"</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="st">"pipistrellus"</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>full_name <span class="ot">&lt;-</span> <span class="fu">paste</span>(genus_name, species_name, <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#This currently only downloads 100,000 of the ~3 million possible records.</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Alter the end parameter if you want this to change.</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>europe_occurrences <span class="ot">&lt;-</span> <span class="fu">sp_occurrence</span>(genus_name, species_name, </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ext =</span> europe_extent, <span class="at">down =</span> T, </span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">removeZeros =</span> T, <span class="at">fixnames =</span> T, <span class="at">end =</span> <span class="dv">10000</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                                    </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>long_lats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(europe_occurrences<span class="sc">$</span>lon, europe_occurrences<span class="sc">$</span>lat))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(long_lats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"long"</span>,<span class="st">"lat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>OK, now it’s time to make it better. Can you:</p>
 <ol type="1">
 <li>Figure out what the spatial resolution of the data is. Is it appropriate?</li>
@@ -225,6 +297,16 @@ ul.task-list li input[type="checkbox"] {
 <section id="putting-it-into-practice" class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-into-practice">2.2 Putting it into practice</h3>
 <p>Below is some code that loads some environmental data for use with the pipistrelle data. Run it and make sure you’re comfortable with it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Downloading environmental data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Information on bioclim variables can be found here: https://www.worldclim.org/data/bioclim.html</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> <span class="fu">worldclim_global</span>(<span class="at">res =</span> <span class="st">"10"</span>, <span class="at">var =</span> <span class="st">"bio"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim, europe_extent)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> <span class="fu">cmip6_world</span>(<span class="at">model =</span> <span class="st">"ACCESS-CM2"</span>, <span class="at">ssp =</span><span class="st">"585"</span>, <span class="at">time =</span> <span class="st">"2061-2080"</span>, <span class="at">var =</span> <span class="st">"bioc"</span>, <span class="at">res =</span> <span class="st">"10"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim_future, europe_bioclim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>OK, now it’s time to make it better. Can you:</p>
 <ol type="1">
 <li>Figure out what the spatial resolution of the environmental data is. Is it appropriate and does it match to the scale of the bat data?</li>
@@ -249,6 +331,65 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="distribution-models-are-like-regular-statistical-models-so-check-them-properly">3.2 Distribution models are like regular statistical models so check them properly</h3>
 <p>Would you ever fit a statistical model without checking whether the explanatory variables were correlated? Don’t answer because I’m sure you would (I know I have!) but we really mustn’t when fitting distribution models. Environmental data are often extremely ‘spatially auto-correlated’, which means that points that are nearby each other tend to be similar. They’re often very correlated in terms of underlying processes: places where it rains a lot tend to have very damp soil, and places where there’s high solar radiation tend to be very hot. These correlated processes can bias the distribution model you get in lots of very confusing ways. For example, if you have lots of variables that are similar (_e.g., where it’s hot, it’s also very dry, and there’s also not a lot of trees) then those variables will ‘compete’ with one-another for variance, such that the three <em>combined</em> seem important in your model but each separately doesn’t seem very important.</p>
 <p>Would you ever fit a statistical model without making sure that any bias or uncertainty in your underlying data isn’t accounted for? No, of course you wouldn’t! Alright, let’s be</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Using biomod2 model-building</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>pipistrellus_model <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Modeling</span>(<span class="at">bm.format =</span> pipistrellus_data,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">modeling.id =</span> <span class="st">'GAM'</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">models =</span> <span class="st">"GAM"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.strategy =</span> <span class="st">'kfold'</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.k =</span> <span class="dv">5</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.nb.rep =</span> <span class="dv">3</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">#CV.perc = 0.8,</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">OPT.strategy =</span> <span class="st">'default'</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">var.import =</span> <span class="dv">3</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">metric.eval =</span> <span class="fu">c</span>(<span class="st">'TSS'</span>,<span class="st">'ROC'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Evaluating and plotting models</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>all_data_models <span class="ot">&lt;-</span> <span class="fu">get_built_models</span>(pipistrellus_model, <span class="at">PA =</span> <span class="st">"allData"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bm_PlotResponseCurves</span>(pipistrellus_model, <span class="at">models =</span> all_data_models)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(europe_bioclim_future) <span class="ot">&lt;-</span> <span class="fu">names</span>(europe_bioclim)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>pipistrellus_current <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">proj.name =</span> <span class="st">'Current'</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">new.env =</span> europe_bioclim,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.binary =</span> <span class="st">'all'</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.filter =</span> <span class="st">'all'</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>pipistrellus_future <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">proj.name =</span> <span class="st">'Future'</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">new.env =</span> europe_bioclim_future,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">metric.binary =</span> <span class="st">'TSS'</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>current_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_current, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>future_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_future, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>pipistrelle_rangesize_change <span class="ot">&lt;-</span> <span class="fu">BIOMOD_RangeSize</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="at">proj.current =</span> current_projections, </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="at">proj.future =</span> future_projections)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(current_projections<span class="sc">$</span>Pipistrellus.pipistrellus_allData_allRun_GAM)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pipistrelle_rangesize_change<span class="sc">$</span>Diff.By.Pixel[[<span class="dv">4</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

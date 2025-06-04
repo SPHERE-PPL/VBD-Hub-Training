@@ -1,9 +1,17 @@
 ---
 title: "Species Distribution Modelling"
-editor: 
-  markdown: 
-    wrap: 72
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    page-layout: article
+  typst: default
+execute:
+  eval: false
 ---
+
 ## Overview
 
 Modelling diseases is tough. You need to understand how they're
@@ -155,7 +163,7 @@ you won't learn anything about the species you actually care about.
 Below is some code that loads data on the pipstrelle bat from GBIF into
 R. Run it and make sure you're comfortable with it.
 
-```{R}
+```{r output=FALSE}
 # Load packages
 library(biomod2)
 library(rnaturalearth)
@@ -245,7 +253,7 @@ that's for another section...
 Below is some code that loads some environmental data for use with the
 pipistrelle data. Run it and make sure you're comfortable with it.
 
-```{R}
+```{r output=FALSE}
 # Get present-day BIOCLIM data (see https://www.worldclim.org/data/bioclim.html)
 europe_bioclim <- worldclim_global(res = "10", var = "bio", path = ".")
 europe_bioclim <- terra::crop(europe_bioclim, europe_extent)
@@ -381,7 +389,7 @@ that to you in the practical. Think of this as a 'feature', not a
 Below is some code that fits a model to your bat data. Run it and make
 sure you're comfortable with it.
 
-```{R}
+```{r output=FALSE}
 # Pull out a subset of training data
 train_data <- data.frame(full_name = rep(1,nrow(long_lats)))
 
@@ -506,7 +514,7 @@ doing well and make mistakes. Look for patterns: are there particular
 regions, or periods of time, that tend to do well? And then see if you
 can find a way to improve your model accordingly.
 
-```{R}
+```{r output=FALSE}
 #Evaluating and plotting models
 
 all_data_models <- get_built_models(pipistrellus_model, PA = "allData")
