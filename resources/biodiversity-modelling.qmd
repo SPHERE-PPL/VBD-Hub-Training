@@ -1,6 +1,13 @@
 ---
 title: "Spatial Analysis and Autocorrelation"
-format: pdf
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    toc: true
+    page-layout: article
+  typst: default
 execute:
   eval: false
 editor: 
