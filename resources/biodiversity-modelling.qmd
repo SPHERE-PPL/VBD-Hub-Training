@@ -1,5 +1,5 @@
 ---
-title: "Spatial Analysis and Autocorrelation"
+title: "Species Distribution Modelling"
 editor: 
   markdown: 
     wrap: 72
@@ -8,7 +8,7 @@ editor:
 
 Modelling diseases is tough. You need to understand how they're
 transmitted, how they affect hosts, and the rate at which they grow. So
-understanding vector-bourne diseases is arguably even worse, because now
+understanding vector-borne diseases is arguably even worse, because now
 you *also* need to understand how the vectors of those diseases move
 around, are (not) affected by a pathogen they're transmitting, the rate
 at which they grow, and how they transmit that pathogen on. What a
@@ -70,7 +70,7 @@ two. So let's focus on those two.
 
 ### 1.1 Spatio-temporal scaling.
 
-![](Cavender-Bares2009-figure.png){fig-align="center"}
+![*Figure 1. Spatio-temporal scaling*. Taken from Cavender-Bares et al. (2009; full paper is in the 'resources' section of this website). Description in the text.](Cavender-Bares2009-figure.png){fig-align="center"}
 
 The figure above shows what distribution modellers and ecologists mean
 by spatio-temporal scaling. To an ecologist, when you look across a
@@ -140,7 +140,7 @@ But you do need to be aware of the biases in GBIF. There are different
 kinds of data you can pull in ('human observations' that are taken from
 direct sighting from anyone, 'preserved specimens' that are observations
 vouchered in a central repository somewhere, 'machine observations' that
-are computer-derived observations from recorings/pictures, and many
+are computer-derived observations from recordings/pictures, and many
 more). There are also different levels of confidence in the observations
 (seen, dissected and confirmed, DNA-verified, and many more). What are
 you working with? *This matters for modelling the distributions of
@@ -156,7 +156,31 @@ Below is some code that loads data on the pipstrelle bat from GBIF into
 R. Run it and make sure you're comfortable with it.
 
 ```{R}
+# Load packages
+library(biomod2)
+library(rnaturalearth)
+library(geodata)
+library(terra)
 
+# Get a map of Europe to use as a 'base' for plotting and searching
+world <- ne_countries(scale = "large", returnclass = "sv")
+europe_extent <- ext(-20,50,35,70) #Rough coordinates for EU
+europe_shapefile <- crop(world, europe_extent)
+
+# Pick a species to work with
+genus_name <- "Pipistrellus"
+species_name <- "pipistrellus"
+full_name <- paste(genus_name, species_name, sep = " ")
+
+# Download occurrences of that species
+
+# (we're "only" downloading 100,000 of the ~3 million possible records;
+#  change 'end' if you want to get more)
+europe_occurrences <- sp_occurrence(genus_name, species_name, 
+                                    ext = europe_extent, down = T, 
+                                    removeZeros = T, fixnames = T, end = 10000)
+long_lats <- data.frame(cbind(europe_occurrences$lon, europe_occurrences$lat))
+names(long_lats) <- c("long","lat")
 ```
 
 OK, now it's time to make it better. Can you:
@@ -193,7 +217,7 @@ latitude, longitude, date, and time). Environmental space is the
 environmental conditions associated with that observation, such as the
 temperature, precipitation, or underlying geology.
 
-![](Soberon-2009-EGspace.png){fig-align="center"}
+![*Figure 2. Environmental space vs. Geographic space*. Taken from Soberón et al. (2009; full paper is in the 'resources' section of this website). Description in the text.](Soberon-2009-EGspace.png){fig-align="center"}
 
 This terminology is important to understand because you will very often
 hear, or read, distribution modellers talking about "E Space" or "G
@@ -222,7 +246,13 @@ Below is some code that loads some environmental data for use with the
 pipistrelle data. Run it and make sure you're comfortable with it.
 
 ```{R}
+# Get present-day BIOCLIM data (see https://www.worldclim.org/data/bioclim.html)
+europe_bioclim <- worldclim_global(res = "10", var = "bio", path = ".")
+europe_bioclim <- terra::crop(europe_bioclim, europe_extent)
 
+# Get some future predictions
+europe_bioclim_future <- cmip6_world(model = "ACCESS-CM2", ssp ="585", time = "2061-2080", var = "bioc", res = "10", path = ".")
+europe_bioclim_future <- terra::crop(europe_bioclim_future, europe_bioclim)
 ```
 
 OK, now it's time to make it better. Can you:
@@ -235,7 +265,7 @@ OK, now it's time to make it better. Can you:
     would you give your analysis so far under the first and second
     groups? Why?
 4.  Can you improve your rating by making use of other data? Consider
-    Googling CHELSA and AREAData (warning: your demonstrators are
+    Googling [CHELSA](https://chelsa-climate.org/) and [AREAData](https://pearselab.github.io/areadata/) (warning: your demonstrators are
     contractually obliged to like analyses that make use of AREAData).
 5.  Check the above with a demonstrator (if you haven't already!)
 
@@ -258,7 +288,7 @@ That's because, while Araujo et al. put pseudo-absences in the first
 section (and I really can see why), I think it's hard to talk about them
 without talking about model-fitting. And I'm writing this tutorial, not
 them, so I can do whatever I want. Sorry if it's a bit confusing to talk
-about crtierion 1E in section 3.
+about criterion 1E in section 3.
 
 When modelling where species are found, it's very useful to know where
 they're not found. This absence information can help us distinguish
@@ -307,11 +337,220 @@ processes: places where it rains a lot tend to have very damp soil, and
 places where there's high solar radiation tend to be very hot. These
 correlated processes can bias the distribution model you get in lots of
 very confusing ways. For example, if you have lots of variables that are
-similar (\_e.g., where it's hot, it's also very dry, and there's also
+similar (_e.g._, where it's hot, it's also very dry, and there's also
 not a lot of trees) then those variables will 'compete' with one-another
 for variance, such that the three *combined* seem important in your
 model but each separately doesn't seem very important.
 
-Would you ever fit a statistical model without making sure that any bias
-or uncertainty in your underlying data isn't accounted for? No, of
-course you wouldn't! Alright, let's be
+Would you ever fit a statistical model without making sure that any
+bias or uncertainty in your underlying data isn't accounted for? Well,
+again, let's be honest you probably have, but the data we use for
+distribution models (normally taken from GBIF) are _extremely
+biased_. There are essentially entire fields of study devoted to
+understanding what kinds of species people are more likely to spot,
+and how to account for biases in where people go looking for
+species. The sampling effort is extremely uneven across the Earth, and
+if you're not careful you can end up building a distribution model of
+where people like to go looking for species (warmer-than-average,
+drier-than-average, richer-than-average places) and not where your
+vector actually likes to live.
+
+**This matters for modelling the distributions of vectors because
+otherwise your results will be completely wrong.** There won't be an
+easy way to tell, from inspecting the model or the outputs, whether
+the model is totally wrong or not. 'Garbage in, garbage out' as I keep
+saying: it is impossible to build a statistical model that can
+robustly and reliably detect when the data it's given breaks the
+fundamental assumptions of the model itself (this is something called
+"Gödel's incompleteness theorem"). So please check it yourself.
+
+### 3.3 Bonus feature: learning about a distribution model algorithm
+
+The package we'll be using, 'biomod2', is a fantastic package in that
+it lets you fit lots of different kinds of models. There is absolutely
+no way to explain all of these in the time we have available, so I'm
+making you a deal: in the practical, I'll give you the opportunity to
+vote on one of a subset of methods. I'll then explain that method to
+you. So this is a placeholder to emphasise that, while you may be
+wondering right now "but what model am I fitting?!" I will explain
+that to you in the practical. Think of this as a 'feature', not a
+'bug' - you get to choose the one you learn!
+
+### 3.4 Putting it into practice
+
+Below is some code that fits a model to your bat data. Run it and make
+sure you're comfortable with it.
+
+```{R}
+# Pull out a subset of training data
+train_data <- data.frame(full_name = rep(1,nrow(long_lats)))
+
+# Format the data
+pipistrellus_data <- BIOMOD_FormatingData(resp.var = train_data,
+                                    expl.var = europe_bioclim,
+                                    resp.xy = long_lats,
+                                    resp.name = full_name,
+                                    PA.nb.rep = 5,
+                                    PA.nb.absences = nrow(long_lats),
+                                    PA.strategy = 'random',
+                                    filter.raster = T)
+
+# Train the model
+pipistrellus_model <- BIOMOD_Modeling(bm.format = pipistrellus_data,
+                                    modeling.id = 'GAM',
+                                    models = "GAM",
+                                    CV.strategy = 'kfold',
+                                    CV.k = 5,
+                                    CV.nb.rep = 3,
+                                    #CV.perc = 0.8,
+                                    OPT.strategy = 'default',
+                                    var.import = 3,
+                                    metric.eval = c('TSS','ROC'))
+```
+
+In this tutorial, I'm not going through the details of how different
+kinds of statistical model are fit. I will be available, in the
+practical, to answer any questions you have. Don't worry about the
+fact the code above splits the model into training and validation
+subsets.
+
+OK, now it's time to make it better. Can you:
+
+1.  Figure out how to check whether or not the explanatory variables
+    are correlated? Hint: None of the code above checks this, you'll
+    have to do it yourself. You might find the function 'pairs' to be
+    useful...
+2.  What is the pseudo-absence strategy being used in this modelling
+    approach? Hint: 'PA' stands for 'pseudo-absence'. Do you agree
+    with it? How could we make it better/worse?
+3.  What are the spatial ('geographic') and environmental extents of
+    the model? Are they wide enough?
+4.  Go through the Araujo table in the resources. What medal rating
+    would you give your analysis so far under the first and second
+    groups? Why?
+5.  Check the above with a demonstrator (if you haven't already!)
+
+## 4 Evaluating your model
+
+This is the hardest section to do properly (I think) and it's the one
+that receives the least attention in the literature (I think):
+validation!
+
+### 4.1 Training vs. validation data
+
+When fitting a machine learning ('AI') model, we typically split our
+data into training vs. validation subsets. We train (build) the model
+on the training subset, and then we test how well the model performs
+in the validation subset. We don't want to mix up the two kinds of
+data so that we've got some independent data to test our model
+with. Quite often we're working with methods where it's impossible to
+get a p-value (or even an $r^2$ value) and so it's quite hard to tell
+whether or not we've done a good job. That makes it absolutely vital
+to have a separate set of data to test what we've done with - we have
+no formal, proven statistical or mathematical framework to fall back
+on to see if we've done a good job or not.
+
+**This matters for modelling the distributions of vectors because if
+you don't pick a proper set of validation data you'll get the wrong
+answer**. Are your validation data from the same region of E or G
+space? Well then are you absolutely certain that they're actually
+independent data, and not just a collection of data taken from the
+same, unreliable scheme that generated your training data? Because if
+they are... then that's not really an independent test of the data.
+
+### 4.2 Receiver Operating Characteristic curves (ROC curves) and other summary statistics
+
+This isn't in 'The Araujo et al. Criteria' but it's something I feel
+strongly about so I'm going to write about it here anyway. My
+tutorial, my rules! 
+
+When fitting a distribution model, it's common to fall back on summary
+statistics that show how the model performed. Metrics such as
+'precision' (how many of your predicted occurrences were correct) and
+recall (the fraction of occurrences your model predicted) are really
+loved by modellers. So too are receiver-operating characteristic
+curves (ROCs), where the rate of true-positives (correctly identifying
+occurrences) are plotted against rates of false-positives (incorrectly
+identifying occurrences) are plotted. Figure 3 shows such a curve: the
+important thing to notice is that you almost never, ever get a
+'perfect classifier'. If you identify more true positives (vertical
+axis) then you're necessarily going to have more false-alarms (the
+horizontal axis). It's a bit like fire alarms: we absolutely cannot
+have a fire alarm that misses a fire, so we have false-alarms where
+the alarm goes off because we need to set it so sensitive that it
+detects even very rare events.
+
+![*Figure 3. Receiver Operating Characteristic Curves (ROC curves)*. Taken from wikipedia (look, it's a good diagram!): [https://en.wikipedia.org/wiki/Receiver_operating_characteristic](https://en.wikipedia.org/wiki/Receiver_operating_characteristic). Description in the text.](https://en.wikipedia.org/wiki/Receiver_operating_characteristic){fig-align="center"}
+
+The problem, however, is that these curves worked very well in World
+War II at identifying planes, but for species distribution models the
+data are auto-correlated and so you can't just assume that a ROC-type
+approach will work. That the model tends to do very well in data that
+may not be perfectly independent is not really of interest (see
+above), and so we need to use an approach that is robust to those
+issues. For more on this, read about the criminally under-valued
+'temporal validation plots' developed by a friend of mine (no conflict
+there!): [Rapacciuolo et al. (2014) Methods in Ecology & Evolution
+5(5):
+407](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12181).
+
+**This matters for vector distribution models because any single
+estimator of whether a model is doing a good job will have similar
+problems**. Gödel's incompleteness theorem means that you can never
+fully understand a system: every statistical test has, itself, a set
+of assumptions that you need to test. So if you want to see whether
+your model is doing a good job, tests are good, but at the end of the
+day you have to check for yourself. So my advice? Plot out your
+model. See where in geographic and environmental space the model is
+doing well and make mistakes. Look for patterns: are there particular
+regions, or periods of time, that tend to do well? And then see if you
+can find a way to improve your model accordingly.
+
+```{R}
+#Evaluating and plotting models
+
+all_data_models <- get_built_models(pipistrellus_model, PA = "allData")
+bm_PlotResponseCurves(pipistrellus_model, models = all_data_models)
+
+names(europe_bioclim_future) <- names(europe_bioclim)
+pipistrellus_current <- BIOMOD_Projection(bm.mod = pipistrellus_model,
+                                  proj.name = 'Current',
+                                  new.env = europe_bioclim,
+                                  models.chosen = 'all',
+                                  metric.binary = 'all',
+                                  metric.filter = 'all',
+                                  build.clamping.mask = TRUE)
+
+pipistrellus_future <- BIOMOD_Projection(bm.mod = pipistrellus_model,
+                                            proj.name = 'Future',
+                                            new.env = europe_bioclim_future,
+                                            models.chosen = 'all',
+                                            metric.binary = 'TSS',
+                                            build.clamping.mask = TRUE)
+
+current_projections <- get_predictions(pipistrellus_current, metric.binary = "TSS")
+future_projections <- get_predictions(pipistrellus_future, metric.binary = "TSS")
+
+pipistrelle_rangesize_change <- BIOMOD_RangeSize(
+proj.current = current_projections, 
+proj.future = future_projections)
+
+plot(current_projections$Pipistrellus.pipistrellus_allData_allRun_GAM)
+
+plot(pipistrelle_rangesize_change$Diff.By.Pixel[[4]])
+```
+
+OK, now it's time to make it better. Can you:
+
+1.  Figure out how to plot a ROC curve for your model?
+2.  See where in space you're under/over predicting occurrences?
+3.  Go through the Araujo table in the resources. What medal rating
+    would you give your analysis so far under all the groups? Why?
+4.  Check the above with a demonstrator (if you haven't already!)
+
+## 5 The Final Test
+
+You've made it this far? Good job! Now what you should do is repeat
+this process for a vector you are interested in yourself. Or,
+perhaps... [https://sphere-ppl.org/pages/Forecasting_Contests/](enter
+our forecasting contest!) And win a fabulous prize!...

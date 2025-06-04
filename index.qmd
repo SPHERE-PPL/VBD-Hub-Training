@@ -20,6 +20,8 @@ Welcome to the SPHERE-PPL training on Temporal & Spatial Modelling of Disease Ve
 
 -   [Getting Started Code](resources/code-example.qmd)
 
+-   [Presentation slides](https://docs.google.com/presentation/d/1-_wCmO4gn6hE0CIipc21BFqB4rKgayaCACkZjUZOwIU/edit?usp=sharing)
+
 ## Resources
 
 ### Papers
