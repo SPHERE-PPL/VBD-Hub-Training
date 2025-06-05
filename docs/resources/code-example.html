@@ -185,12 +185,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="getting-started" class="level1">
 <h1>Getting Started</h1>
-<p>This walkthrough is based on the <a href="https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html">first vignette</a> for biomod2.</p>
+<p>This walkthrough is based on the <a href="https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html">first vignette</a> for biomod2. <a href="https://biomodhub.github.io/biomod2/">Biomod2</a> is a framework for rapid species distribution modelling and evaluation.</p>
 <p>We’ll start by loading the libraries to carry out the work. Alongside biomod2, we’ll use several libraries to help us load the data:</p>
 <ul>
 <li><a href="https://github.com/rspatial/geodata">geodata</a>, which provides functions to download GBIF and environmental data dynamically.</li>
 <li><a href="https://www.tidyverse.org/">tidyverse</a>, which helps with general data-handling.</li>
 <li><a href="https://rspatial.github.io/terra/index.html">terra</a>, which has functions for manipulating raster files.</li>
+<li><a href="https://github.com/ropensci/rnaturalearth">rnaturalearth</a>, that provides vector information for things like country boundaries.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -226,55 +227,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>long_lats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(europe_occurrences<span class="sc">$</span>lon, europe_occurrences<span class="sc">$</span>lat))</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(long_lats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"long"</span>,<span class="st">"lat"</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#We're working with opportunistic sampling, so all our observations are positive. This means that we have to add in assumed-absences (pseudoabsences) amongst the axes of our regions. We've set there to be as many pseudoabsences as there are recorded positives.</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#We're working with opportunistic sampling, so all our observations are positive. </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#This means that we have to add in assumed-absences (pseudoabsences) amongst </span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#the axes of our environment. We've set there to be as many pseudoabsences </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#as there are recorded positives in the PA.nb.absences line.</span></span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>pipistrellus_model <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Modeling</span>(<span class="at">bm.format =</span> pipistrellus_data,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">modeling.id =</span> <span class="st">'GAM'</span>,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">models =</span> <span class="st">"GAM"</span>,</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.strategy =</span> <span class="st">'kfold'</span>,</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.k =</span> <span class="dv">5</span>,</span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.nb.rep =</span> <span class="dv">3</span>,</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">#CV.perc = 0.8,</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">OPT.strategy =</span> <span class="st">'default'</span>,</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">var.import =</span> <span class="dv">3</span>,</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">metric.eval =</span> <span class="fu">c</span>(<span class="st">'TSS'</span>,<span class="st">'ROC'</span>))</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>all_data_models <span class="ot">&lt;-</span> <span class="fu">get_built_models</span>(pipistrellus_model, <span class="at">PA =</span> <span class="st">"allData"</span>)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="fu">bm_PlotResponseCurves</span>(pipistrellus_model, <span class="at">models =</span> all_data_models)</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(europe_bioclim_future) <span class="ot">&lt;-</span> <span class="fu">names</span>(europe_bioclim)</span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>pipistrellus_current <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">proj.name =</span> <span class="st">'Current'</span>,</span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">new.env =</span> europe_bioclim,</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.binary =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.filter =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>pipistrellus_future <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">proj.name =</span> <span class="st">'Future'</span>,</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">new.env =</span> europe_bioclim_future,</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">metric.binary =</span> <span class="st">'TSS'</span>,</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>current_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_current, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>future_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_future, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>pipistrelle_rangesize_change <span class="ot">&lt;-</span> <span class="fu">BIOMOD_RangeSize</span>(<span class="at">proj.current =</span> current_projections, </span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">proj.future =</span> future_projections)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Below is where the model fit happens - you can change models parameter to</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#try new models (get the list of models by using ?BIOMOD_Modeling).</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co">#CV here is cross-validation which is how you can evaluate the fit of your model</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co">#between separate partitions of your data.</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>pipistrellus_model <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Modeling</span>(<span class="at">bm.format =</span> pipistrellus_data,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">modeling.id =</span> <span class="st">'GAM'</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">models =</span> <span class="st">"GAM"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.strategy =</span> <span class="st">'kfold'</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.k =</span> <span class="dv">5</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">CV.nb.rep =</span> <span class="dv">3</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                                    <span class="co">#CV.perc = 0.8,</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">OPT.strategy =</span> <span class="st">'default'</span>,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">var.import =</span> <span class="dv">3</span>,</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">metric.eval =</span> <span class="fu">c</span>(<span class="st">'TSS'</span>,<span class="st">'ROC'</span>))</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="co">#This grabs the information for each separate model that you've fit (CV * rep).</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>all_data_models <span class="ot">&lt;-</span> <span class="fu">get_built_models</span>(pipistrellus_model, <span class="at">PA =</span> <span class="st">"allData"</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">#This will show you how the probability of species presence changes with each</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">#environmental variable. This plot can get a bit crowded if you have fit many</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">#different models, which you can simplify by changing the models parameter.</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="fu">bm_PlotResponseCurves</span>(pipistrellus_model, <span class="at">models =</span> all_data_models)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(europe_bioclim_future) <span class="ot">&lt;-</span> <span class="fu">names</span>(europe_bioclim)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="co">#The following two calls will produce maps of current predicted bat distribtion,</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co">#and the expected bat distribution under the IPCC 585 SSP pathway in 2080.</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>pipistrellus_current <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">proj.name =</span> <span class="st">'Current'</span>,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">new.env =</span> europe_bioclim,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.binary =</span> <span class="st">'all'</span>,</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">metric.filter =</span> <span class="st">'all'</span>,</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>pipistrellus_future <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Projection</span>(<span class="at">bm.mod =</span> pipistrellus_model,</span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">proj.name =</span> <span class="st">'Future'</span>,</span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">new.env =</span> europe_bioclim_future,</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">models.chosen =</span> <span class="st">'all'</span>,</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">metric.binary =</span> <span class="st">'TSS'</span>,</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">build.clamping.mask =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>current_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_current, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>future_projections <span class="ot">&lt;-</span> <span class="fu">get_predictions</span>(pipistrellus_future, <span class="at">metric.binary =</span> <span class="st">"TSS"</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we can look at their difference in range sizes.</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>pipistrelle_rangesize_change <span class="ot">&lt;-</span> <span class="fu">BIOMOD_RangeSize</span>(<span class="at">proj.current =</span> current_projections, </span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">proj.future =</span> future_projections)</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co">#The range-size values are created by:</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="co">#proj.future - 2 * proj.current</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="co">#So values of 1 are future gains in distribution, values of -2 are future losses. </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(current_projections<span class="sc">$</span>Pipistrellus.pipistrellus_allData_allRun_GAM)</span>
