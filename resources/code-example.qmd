@@ -6,13 +6,14 @@ execute:
 
 # Getting Started
 
-This walkthrough is based on the [first vignette](https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html) for biomod2.
+This walkthrough is based on the [first vignette](https://biomodhub.github.io/biomod2/articles/examples_1_mainFunctions.html) for biomod2. [Biomod2](https://biomodhub.github.io/biomod2/) is a framework for rapid species distribution modelling and evaluation.
 
 We'll start by loading the libraries to carry out the work. Alongside biomod2, we'll use several libraries to help us load the data:
 
 -   [geodata](https://github.com/rspatial/geodata), which provides functions to download GBIF and environmental data dynamically.
 -   [tidyverse](https://www.tidyverse.org/), which helps with general data-handling.
 -   [terra](https://rspatial.github.io/terra/index.html), which has functions for manipulating raster files.
+-   [rnaturalearth](https://github.com/ropensci/rnaturalearth), that provides vector information for things like country boundaries.
 
 ```{r output=FALSE}
 library(tidyverse)
@@ -51,10 +52,12 @@ europe_occurrences <- sp_occurrence(genus_name, species_name, ext = europe_exten
 long_lats <- data.frame(cbind(europe_occurrences$lon, europe_occurrences$lat))
 names(long_lats) <- c("long","lat")
 
-#We're working with opportunistic sampling, so all our observations are positive. This means that we have to add in assumed-absences (pseudoabsences) amongst the axes of our regions. We've set there to be as many pseudoabsences as there are recorded positives.
+#We're working with opportunistic sampling, so all our observations are positive. 
+#This means that we have to add in assumed-absences (pseudoabsences) amongst 
+#the axes of our environment. We've set there to be as many pseudoabsences 
+#as there are recorded positives in the PA.nb.absences line.
 
 train_data <- data.frame(full_name = rep(1,nrow(long_lats)))
-
 
 pipistrellus_data <- BIOMOD_FormatingData(resp.var = train_data,
                                     expl.var = europe_bioclim,
@@ -64,6 +67,12 @@ pipistrellus_data <- BIOMOD_FormatingData(resp.var = train_data,
                                     PA.nb.absences = nrow(long_lats),
                                     PA.strategy = 'random',
                                     filter.raster = T)
+
+
+#Below is where the model fit happens - you can change models parameter to
+#try new models (get the list of models by using ?BIOMOD_Modeling).
+#CV here is cross-validation which is how you can evaluate the fit of your model
+#between separate partitions of your data.
 
 pipistrellus_model <- BIOMOD_Modeling(bm.format = pipistrellus_data,
                                     modeling.id = 'GAM',
@@ -76,10 +85,18 @@ pipistrellus_model <- BIOMOD_Modeling(bm.format = pipistrellus_data,
                                     var.import = 3,
                                     metric.eval = c('TSS','ROC'))
 
+#This grabs the information for each separate model that you've fit (CV * rep).
 all_data_models <- get_built_models(pipistrellus_model, PA = "allData")
+
+#This will show you how the probability of species presence changes with each
+#environmental variable. This plot can get a bit crowded if you have fit many
+#different models, which you can simplify by changing the models parameter.
 bm_PlotResponseCurves(pipistrellus_model, models = all_data_models)
 
 names(europe_bioclim_future) <- names(europe_bioclim)
+
+#The following two calls will produce maps of current predicted bat distribtion,
+#and the expected bat distribution under the IPCC 585 SSP pathway in 2080.
 pipistrellus_current <- BIOMOD_Projection(bm.mod = pipistrellus_model,
                                   proj.name = 'Current',
                                   new.env = europe_bioclim,
@@ -98,8 +115,15 @@ pipistrellus_future <- BIOMOD_Projection(bm.mod = pipistrellus_model,
 current_projections <- get_predictions(pipistrellus_current, metric.binary = "TSS")
 future_projections <- get_predictions(pipistrellus_future, metric.binary = "TSS")
 
+#Then we can look at their difference in range sizes.
 pipistrelle_rangesize_change <- BIOMOD_RangeSize(proj.current = current_projections, 
                                     proj.future = future_projections)
+
+#The range-size values are created by:
+#proj.future - 2 * proj.current
+#So values of 1 are future gains in distribution, values of -2 are future losses. 
+
+
 ```
 
 ```{r}
