@@ -42,6 +42,10 @@ Welcome to the SPHERE-PPL training on Temporal & Spatial Modelling of Disease Ve
 
 -   [Paper](resources/Soberón-2009.pdf)
 
+**Temporal validation plots: quantifying how well correlative species distribution models predict species' range changes over time**
+
+-   [Paper](resources/Rapacciuolo-2014.pdf)
+
 ### Lyme Disease Forecasting Contest
 
 -   [Getting Started](https://sphere-ppl.org/pages/Forecasting_Contests/)
