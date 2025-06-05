@@ -136,3 +136,13 @@ plot(pipistrelle_rangesize_change$Diff.By.Pixel[[4]])
 ![Current Range Predictions](Pip_fig1.png){fig-align="center"}
 
 ![Comparison to Future Range Prediction](Pip_fig2.png){fig-align="center"}
+
+The numbers in the figure correspond to:
+
+-   **-2:** Predicted to be lost.
+
+-   **-1:** Predicted to remain occupied.
+
+-   **0:** Predicted to remain unoccupied.
+
+-   **1:** Predicted to be gained.
