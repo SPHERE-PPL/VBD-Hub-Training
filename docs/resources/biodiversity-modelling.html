@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spatial Analysis and Autocorrelation – SPHERE-PPL</title>
+<title>Species Distribution Modelling – SPHERE-PPL</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,8 +21,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +34,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -65,17 +66,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../Logos/Logo_NoText.png" rel="icon" type="image/png">
-<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-8ef56b68f8fa1e9d2ba328e99e439f80.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-8b57da6fcf3a5614cc4f30e21ee5e15e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-e5ce62eafe7734e6b64a07b2bb7fe6fe.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-8b57da6fcf3a5614cc4f30e21ee5e15e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -104,10 +108,201 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -165,25 +360,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#taxonomic-identification" id="toc-taxonomic-identification" class="nav-link" data-scroll-target="#taxonomic-identification">1.2 Taxonomic identification</a></li>
   <li><a href="#putting-it-into-practice." id="toc-putting-it-into-practice." class="nav-link" data-scroll-target="#putting-it-into-practice.">1.3 Putting it into practice.</a></li>
   </ul></li>
-  <li><a href="#make-sure-your-environmental-data-arent-rubbish" id="toc-make-sure-your-environmental-data-arent-rubbish" class="nav-link" data-scroll-target="#make-sure-your-environmental-data-arent-rubbish">2 Make sure your environmental data aren’t rubbish</a>
+  <li><a href="#make-sure-your-environmental-data-arent-rubbish" id="toc-make-sure-your-environmental-data-arent-rubbish" class="nav-link" data-scroll-target="#make-sure-your-environmental-data-arent-rubbish">2. Make sure your environmental data aren’t rubbish</a>
   <ul class="collapse">
   <li><a href="#geographic-space-vs.-environmental-space" id="toc-geographic-space-vs.-environmental-space" class="nav-link" data-scroll-target="#geographic-space-vs.-environmental-space">2.1 Geographic space vs.&nbsp;environmental space</a></li>
   <li><a href="#putting-it-into-practice" id="toc-putting-it-into-practice" class="nav-link" data-scroll-target="#putting-it-into-practice">2.2 Putting it into practice</a></li>
   </ul></li>
-  <li><a href="#model-building" id="toc-model-building" class="nav-link" data-scroll-target="#model-building">3 Model building</a>
+  <li><a href="#model-building" id="toc-model-building" class="nav-link" data-scroll-target="#model-building">3. Model building</a>
   <ul class="collapse">
   <li><a href="#pseudo-absences-and-model-extent" id="toc-pseudo-absences-and-model-extent" class="nav-link" data-scroll-target="#pseudo-absences-and-model-extent">3.1 Pseudo-absences and model extent</a></li>
   <li><a href="#distribution-models-are-like-regular-statistical-models-so-check-them-properly" id="toc-distribution-models-are-like-regular-statistical-models-so-check-them-properly" class="nav-link" data-scroll-target="#distribution-models-are-like-regular-statistical-models-so-check-them-properly">3.2 Distribution models are like regular statistical models so check them properly</a></li>
+  <li><a href="#bonus-feature-learning-about-a-distribution-model-algorithm" id="toc-bonus-feature-learning-about-a-distribution-model-algorithm" class="nav-link" data-scroll-target="#bonus-feature-learning-about-a-distribution-model-algorithm">3.3 Bonus feature: learning about a distribution model algorithm</a></li>
+  <li><a href="#putting-it-into-practice-1" id="toc-putting-it-into-practice-1" class="nav-link" data-scroll-target="#putting-it-into-practice-1">3.4 Putting it into practice</a></li>
   </ul></li>
+  <li><a href="#evaluating-your-model" id="toc-evaluating-your-model" class="nav-link" data-scroll-target="#evaluating-your-model">4 Evaluating your model</a>
+  <ul class="collapse">
+  <li><a href="#training-vs.-validation-data" id="toc-training-vs.-validation-data" class="nav-link" data-scroll-target="#training-vs.-validation-data">4.1 Training vs.&nbsp;validation data</a></li>
+  <li><a href="#receiver-operating-characteristic-curves-roc-curves-and-other-summary-statistics" id="toc-receiver-operating-characteristic-curves-roc-curves-and-other-summary-statistics" class="nav-link" data-scroll-target="#receiver-operating-characteristic-curves-roc-curves-and-other-summary-statistics">4.2 Receiver Operating Characteristic curves (ROC curves) and other summary statistics</a></li>
+  </ul></li>
+  <li><a href="#the-final-test" id="toc-the-final-test" class="nav-link" data-scroll-target="#the-final-test">5 The Final Test</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="biodiversity-modelling.pdf"><i class="bi bi-file-pdf"></i>Typst</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Spatial Analysis and Autocorrelation</h1>
+<h1 class="title">Species Distribution Modelling</h1>
 </div>
 
 
@@ -202,14 +406,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>Modelling diseases is tough. You need to understand how they’re transmitted, how they affect hosts, and the rate at which they grow. So understanding vector-bourne diseases is arguably even worse, because now you <em>also</em> need to understand how the vectors of those diseases move around, are (not) affected by a pathogen they’re transmitting, the rate at which they grow, and how they transmit that pathogen on. What a nightmare!</p>
-<p>Luckily for us, there is a whole field of study - distribution modelling - that focuses on understanding the conditions under which species (including vectors) can move around. It’s a massive field (arguably it’s the whole of ecology!) and so there isn’t really time to do it justice in one session. But even more luckily for us, there is a reasonably well-accepted set of standards you can adhere to when building a distribution model. In this tutorial, we’re going to go through that set of standards - which come from the Araujo et al.&nbsp;(2019) paper you can find in the ‘resources’ folder - and then show you how to apply them to model the distribution of a bat.</p>
+<p>Modelling diseases is tough. You need to understand how they’re transmitted, how they affect hosts, and the rate at which they grow. So understanding vector-borne diseases is arguably even worse, because now you <em>also</em> need to understand how the vectors of those diseases move around, are (not) affected by a pathogen they’re transmitting, the rate at which they grow, and how they transmit that pathogen on. What a nightmare!</p>
+<p>Luckily for us, there is a whole field of study - distribution modelling - that focuses on understanding the conditions under which species (including vectors) can move around. It’s a massive field (arguably it’s the whole of ecology!) and so there isn’t really time to do it justice in one session. But even more luckily for us, there is a reasonably well-accepted set of standards you can adhere to when building a distribution model. In this tutorial, we’re going to go through that set of standards - which come from the Araujo et al.&nbsp;(2019) paper you can find in the resources section of the main page - and then show you how to apply them to model the distribution of a bat.</p>
 <p>Your task, should you choose to accept it, is to (1) listen to the lecture at the beginning of the session (or, if you’re reading this online, watch the accompanying video), (2) read through this handout, (3) run the code in this handout, and then (4) see if you can improve the exemplar code for building a bat distribution model to make it score higher according to the Araujo et al.&nbsp;criteria.</p>
 </section>
 <section id="what-are-the-araujo-et-al.-criteria" class="level2">
 <h2 class="anchored" data-anchor-id="what-are-the-araujo-et-al.-criteria">What are ‘The Araujo et al.&nbsp;Criteria’</h2>
-<p>In a well-cited (~1000 citations at the time of writing) paper, a consortium of well-respected distribution modellers came up with a set of criteria by which the accuracy of distribution models could be judged. To be perfectly honest with you, I don’t think they’re necessarily the best criteria that we could come up with, but I do think <em>they’re reasonably criteria that it would be difficult to strongly disagree with</em> (if you can’t tell, this is high praise!). This means they’re essentially perfect for use in a disease ecology or health setting: they’re reliable. So if you want to publish a report for use by a policy-maker, or that will inform a decision, you really can’t do much better than by using these criteria.</p>
-<p>These criteria are also very straightforward. There are lots of sub-criteria that we’ll go through now, but they boil down to four things: make sure (1) the data on where a vector is (not) found are reliable, (2) the data you’ll use to predict where that vector could/will be make biological sense for that vector, (3) fit your statistical or mechanistic model properly, and (4) check that model and its predictions properly. There are a lot of devils in the details that we’re leaving out here, but that’s what it boils down to. So let’s get stuck in.</p>
+<p>In a well-cited (~1000 citations at the time of writing) paper, a consortium of well-respected distribution modellers came up with a set of criteria by which the accuracy of distribution models could be judged. To be perfectly honest with you, I don’t think they’re necessarily the best criteria that we could come up with, but I do think they’re very good and they’re hard to disagree with (if you can’t tell, this is high praise!). This means they’re essentially perfect for use in a disease ecology or health setting: they’re reliable, trustworthy, and trusted. So if you want to publish a report for use by a policy-maker, or that will inform a decision, you really can’t do much better than by using these criteria.</p>
+<p>These criteria are also very straightforward. There are lots of sub-criteria that we’ll go through now, but they boil down to four things: (1) make sure the data on where a vector is (not) found are reliable, (2) ensure the data you’ll use to predict where that vector could/will be make biological sense for that vector, (3) fit your statistical or mechanistic model properly, and (4) check that model and its predictions properly. There are a lot of devils in the details that we’re leaving out here, but that’s what it boils down to. So let’s get stuck in.</p>
 </section>
 <section id="make-sure-your-observation-data-arent-rubbish" class="level2">
 <h2 class="anchored" data-anchor-id="make-sure-your-observation-data-arent-rubbish">1. Make sure your observation data aren’t rubbish</h2>
@@ -218,7 +422,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="spatio-temporal-scaling.">1.1 Spatio-temporal scaling.</h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Cavender-Bares2009-figure.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+<p><img src="Cavender-Bares2009-figure.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 1. Spatio-temporal scaling</strong>. Taken from Cavender-Bares et al.&nbsp;(2009; full paper is in the ‘resources’ section of this website). Description in the text.</figcaption>
 </figure>
 </div>
 <p>The figure above shows what distribution modellers and ecologists mean by spatio-temporal scaling. To an ecologist, when you look across a wider area of space, you are also implicitly taking into account a longer period of time. This means that the kinds of processes, and the kinds of statistical models you need to fit, vary depending on the spatial and temporal <em>scale</em> of interest. For example, if you wanted to predict how many species of plants would be found in a 10cm x 10cm patch of forest over the next five seconds, you wouldn’t really need to account for evolutionary forces. You just need to know the climate conditions <em>right now</em>, the plants found within <em>a few meters</em> of the patch (because they could disperse over), and then you’d be set. Short region, short period of time. But if you wanted to know how many species of plants would be found in a 100km x 100km patch… that would be more complicated. Within that patch there is a huge amount of variation in climate conditions, so you need to understand how species can move across landscapes within that patch, and as species can move over years/decades/centuries within that patch you need to go years/decades/centries further back in time. That, in turn, means you need to start thinking about evolution - what kinds of species could, and have, evolved in that patch of land? But evolution can take millions of years… and so we need to think much further back in time. What a nightmare! But at least in the larger patch, you no longer care about tiny variations in climate between blades of grass - those kinds of processes are averaged out at the larger scale.</p>
@@ -227,49 +432,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="taxonomic-identification" class="level3">
 <h3 class="anchored" data-anchor-id="taxonomic-identification">1.2 Taxonomic identification</h3>
 <p>If you’re an epidemiologist, you’re probably already very aware that it’s hard to identify what particular disease someone has. Imagine someone walks into a clinic and they say their head hurts and asks you what’s wrong with them. You would have to ask follow-up questions (where? for how long?), look at them (are they bleeding from somewhere? how are their pupils?), and maybe conduct follow-up tests (give them an X-ray or MRI). Not every test would be informative for every set of symptoms or disease, and someone who isn’t trained in interpreting a test, even if the right one is given, could make the wrong diagnosis.</p>
-<p>Identifying vectors is much the same thing. For example, there are lots of different kinds of bats, and while they may all look the same to the casual observer they still aren’t the same species and they don’t necessarily carry the same diseases. Distribution modellers have access to a huge amount of data on different species through a number of sources, but the most commonly used (and largest) is (GBIF)[https://gbif.org]. It scoops up data from all kinds of sources - peer-reviewed literature, government schemes, citizen science schemes - everything! And I will put my neck out on the line and say that if you’re not using GBIF you need to have a really good reason not to, because the biases induced by ignoring all that data are often (but not always) bigger than the biases induced by trying to do all the data collection and curation yourself.</p>
-<p>But you do need to be aware of the biases in GBIF. There are different kinds of data you can pull in (‘human observations’ that are taken from direct sighting from anyone, ‘preserved specimens’ that are observations vouchered in a central repository somewhere, ‘machine observations’ that are computer-derived observations from recorings/pictures, and many more). There are also different levels of confidence in the observations (seen, dissected and confirmed, DNA-verified, and many more). What are you working with? <em>This matters for modelling the distributions of vectors because you have to make sure the data you’re collecting is actually relevant to the species you have carefully defined as your vector</em>. “Garbage in, garbage out”: if you feed in a load of data about unrelated species then all your model diagnostic checks might pass but you won’t learn anything about the species you actually care about.</p>
+<p>Identifying vectors is much the same thing. For example, there are lots of different kinds of bats, and while they may all look the same to the casual observer they still aren’t the same species and they don’t necessarily carry the same diseases. Distribution modellers have access to a huge amount of data on different species through a number of sources, but the most commonly used (and largest) is <a href="https://gbif.org">GBIF</a>. It scoops up data from all kinds of sources - peer-reviewed literature, government schemes, citizen science schemes - everything! And I will put my neck out on the line and say that if you’re not using GBIF you need to have a really good reason not to, because the biases induced by ignoring all that data are often (but not always) bigger than the biases induced by trying to do all the data collection and curation yourself.</p>
+<p>But you do need to be aware of the biases in GBIF. There are different kinds of data you can pull in (‘human observations’ that are taken from direct sighting from anyone, ‘preserved specimens’ that are observations vouchered in a central repository somewhere, ‘machine observations’ that are computer-derived observations from recordings/pictures, and many more). There are also different levels of confidence in the observations (seen, dissected and confirmed, DNA-verified, and many more). What are you working with? <strong>This matters for modelling the distributions of vectors because you have to make sure the data you’re collecting is actually relevant to the species you have carefully defined as your vector</strong>. “Garbage in, garbage out”: if you feed in a load of data about unrelated species then all your model diagnostic checks might pass but you won’t learn anything about the species you actually care about.</p>
 </section>
 <section id="putting-it-into-practice." class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-into-practice.">1.3 Putting it into practice.</h3>
 <p>Below is some code that loads data on the pipstrelle bat from GBIF into R. Run it and make sure you’re comfortable with it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Downloading species data</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(biomod2)){</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"biomod2"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(rnaturalearth)){</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(geodata)){</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"geodata"</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(terra)){</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"terra"</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomod2)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">returnclass =</span> <span class="st">"sv"</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>europe_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">50</span>,<span class="dv">35</span>,<span class="dv">70</span>) <span class="co">#Rough coordinates for EU</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>europe_shapefile <span class="ot">&lt;-</span> <span class="fu">crop</span>(world, europe_extent)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>genus_name <span class="ot">&lt;-</span> <span class="st">"Pipistrellus"</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="st">"pipistrellus"</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>full_name <span class="ot">&lt;-</span> <span class="fu">paste</span>(genus_name, species_name, <span class="at">sep =</span> <span class="st">" "</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#This currently only downloads 100,000 of the ~3 million possible records.</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Alter the end parameter if you want this to change.</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>europe_occurrences <span class="ot">&lt;-</span> <span class="fu">sp_occurrence</span>(genus_name, species_name, </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ext =</span> europe_extent, <span class="at">down =</span> T, </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">removeZeros =</span> T, <span class="at">fixnames =</span> T, <span class="at">end =</span> <span class="dv">10000</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>                                    </span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>long_lats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(europe_occurrences<span class="sc">$</span>lon, europe_occurrences<span class="sc">$</span>lat))</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(long_lats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"long"</span>,<span class="st">"lat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomod2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Get a map of Europe to use as a 'base' for plotting and searching</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"large"</span>, <span class="at">returnclass =</span> <span class="st">"sv"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>europe_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(<span class="sc">-</span><span class="dv">20</span>,<span class="dv">50</span>,<span class="dv">35</span>,<span class="dv">70</span>) <span class="co">#Rough coordinates for EU</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>europe_shapefile <span class="ot">&lt;-</span> <span class="fu">crop</span>(world, europe_extent)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a species to work with</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>genus_name <span class="ot">&lt;-</span> <span class="st">"Pipistrellus"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>species_name <span class="ot">&lt;-</span> <span class="st">"pipistrellus"</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>full_name <span class="ot">&lt;-</span> <span class="fu">paste</span>(genus_name, species_name, <span class="at">sep =</span> <span class="st">" "</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Download occurrences of that species</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># (we're "only" downloading 100,000 of the ~3 million possible records;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#  change 'end' if you want to get more)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>europe_occurrences <span class="ot">&lt;-</span> <span class="fu">sp_occurrence</span>(genus_name, species_name, </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">ext =</span> europe_extent, <span class="at">down =</span> T, </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">removeZeros =</span> T, <span class="at">fixnames =</span> T, <span class="at">end =</span> <span class="dv">10000</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>long_lats <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">cbind</span>(europe_occurrences<span class="sc">$</span>lon, europe_occurrences<span class="sc">$</span>lat))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(long_lats) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"long"</span>,<span class="st">"lat"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>OK, now it’s time to make it better. Can you:</p>
 <ol type="1">
@@ -282,70 +476,79 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="make-sure-your-environmental-data-arent-rubbish" class="level2">
-<h2 class="anchored" data-anchor-id="make-sure-your-environmental-data-arent-rubbish">2 Make sure your environmental data aren’t rubbish</h2>
+<h2 class="anchored" data-anchor-id="make-sure-your-environmental-data-arent-rubbish">2. Make sure your environmental data aren’t rubbish</h2>
 <p>Distribution modellers care about the data used to predict species’ distributions just as much as they do the data they have on species’ distributions. Those data are often called ‘explanatory variables’ because they are the data that explain species’ distributions. They commonly include environmental conditions such as temperature or rainfall, but they can also include other factors such as the distributions of other species (<em>e.g.</em>, species that might prey upon, or be food for, the species you care about).</p>
 <section id="geographic-space-vs.-environmental-space" class="level3">
 <h3 class="anchored" data-anchor-id="geographic-space-vs.-environmental-space">2.1 Geographic space vs.&nbsp;environmental space</h3>
 <p>Space isn’t the final frontier. Distribution modellers often think in terms of two kinds of ‘space’: geographic space and environmental space. Geographic space is the kind of space you’re used to thinking about: the location and time at which an observation was made (<em>e.g.</em>, the latitude, longitude, date, and time). Environmental space is the environmental conditions associated with that observation, such as the temperature, precipitation, or underlying geology.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Soberon-2009-EGspace.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+<p><img src="Soberon-2009-EGspace.png" class="img-fluid figure-img"></p>
+<figcaption><strong>Figure 2. Environmental space vs.&nbsp;Geographic space</strong>. Taken from Soberón et al.&nbsp;(2009; full paper is in the ‘resources’ section of this website). The bottom (B) shows the distributions of points (in blue) in ‘geographic space’ - their physical location. The top (A) shows their location in ‘environmental space’ - axes determined by the climate of the region.</figcaption>
 </figure>
 </div>
-<p>This terminology is important to understand because you will very often hear, or read, distribution modellers talking about “E Space” or “G space” (for environmental and geographic space, respectively), and if you don’t know these terms you’ll think they’ve taken an illicit substance. <em>This matters for modelling the distributions of vectors because the processes in your model are fit within E space and the biases are often in G space</em>. If you’re going to fit a model that captures the processes relevant to your vector, you need to think about what, in E space, is important for that species. Take bats as an example. Bats often have temperature tolerances: they can’t survive in temperatures below a certain threshold at certain times of year. So, in order to model them well, you need to have a model that (1) accounts for the minimum temperature at that time of year and (2) you probably need to have a model that can account for a non-linearity in the response to temperature. We’re talking about environmental data right now, so we don’t need to think too much about #2 (but don’t forget about it!) but you definitely need the right geographic data. You might also want to think about how to fit a model that can account for those biases in G space (<em>e.g.</em>, unevenly sampled data through time and across space), but that’s for another section…</p>
+<p>This terminology is important to understand because you will very often hear, or read, distribution modellers talking about “E Space” or “G space” (for environmental and geographic space, respectively), and if you don’t know these terms you’ll think they’ve taken an illicit substance. <strong>This matters for modelling the distributions of vectors because the processes in your model are fit within E space and the biases are often in G space</strong>. If you’re going to fit a model that captures the processes relevant to your vector, you need to think about what, in E space, is important for that species. Take bats as an example. Bats often have temperature tolerances: they can’t survive in temperatures below a certain threshold at certain times of year. So, in order to model them well, you need to have a model that (1) accounts for the minimum temperature at that time of year and (2) you probably need to have a model that can account for a non-linearity in the response to temperature. We’re talking about environmental data right now, so we don’t need to think too much about #2 (but don’t forget about it!) but you definitely need the right geographic data. You might also want to think about how to fit a model that can account for those biases in G space (<em>e.g.</em>, unevenly sampled data through time and across space), but that’s for another section…</p>
 </section>
 <section id="putting-it-into-practice" class="level3">
 <h3 class="anchored" data-anchor-id="putting-it-into-practice">2.2 Putting it into practice</h3>
 <p>Below is some code that loads some environmental data for use with the pipistrelle data. Run it and make sure you’re comfortable with it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Downloading environmental data</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Information on bioclim variables can be found here: https://www.worldclim.org/data/bioclim.html</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> <span class="fu">worldclim_global</span>(<span class="at">res =</span> <span class="st">"10"</span>, <span class="at">var =</span> <span class="st">"bio"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim, europe_extent)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> <span class="fu">cmip6_world</span>(<span class="at">model =</span> <span class="st">"ACCESS-CM2"</span>, <span class="at">ssp =</span><span class="st">"585"</span>, <span class="at">time =</span> <span class="st">"2061-2080"</span>, <span class="at">var =</span> <span class="st">"bioc"</span>, <span class="at">res =</span> <span class="st">"10"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim_future, europe_bioclim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get present-day BIOCLIM data (see https://www.worldclim.org/data/bioclim.html)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> <span class="fu">worldclim_global</span>(<span class="at">res =</span> <span class="st">"10"</span>, <span class="at">var =</span> <span class="st">"bio"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>europe_bioclim <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim, europe_extent)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Get some future predictions</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> <span class="fu">cmip6_world</span>(<span class="at">model =</span> <span class="st">"ACCESS-CM2"</span>, <span class="at">ssp =</span><span class="st">"585"</span>, <span class="at">time =</span> <span class="st">"2061-2080"</span>, <span class="at">var =</span> <span class="st">"bioc"</span>, <span class="at">res =</span> <span class="st">"10"</span>, <span class="at">path =</span> <span class="st">"."</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>europe_bioclim_future <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">crop</span>(europe_bioclim_future, europe_bioclim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>OK, now it’s time to make it better. Can you:</p>
 <ol type="1">
 <li>Figure out what the spatial resolution of the environmental data is. Is it appropriate and does it match to the scale of the bat data?</li>
 <li>Do you have any idea of the uncertainty associated with the data? How accurate is it? Can you find out?</li>
 <li>Go through the Araujo table in the resources. What medal rating would you give your analysis so far under the first and second groups? Why?</li>
-<li>Can you improve your rating by making use of other data? Consider Googling CHELSA and AREAData (warning: your demonstrators are contractually obliged to like analyses that make use of AREAData).</li>
+<li>Can you improve your rating by making use of other data? Consider Googling <a href="https://chelsa-climate.org/">CHELSA</a> and <a href="https://pearselab.github.io/areadata/">AREAData</a> (warning: your demonstrators are contractually obliged to like analyses that make use of AREAData).</li>
 <li>Check the above with a demonstrator (if you haven’t already!)</li>
 </ol>
 </section>
 </section>
 <section id="model-building" class="level2">
-<h2 class="anchored" data-anchor-id="model-building">3 Model building</h2>
+<h2 class="anchored" data-anchor-id="model-building">3. Model building</h2>
 <p>Model building is, I think, the hardest one to describe because it’s the most contentious. Quite reasonably, researchers often want to know what the best model to use to model a species’ distribution is, but sadly there rarely is a “best” model. I like to think of it as a case of every model being, objectively, the best at fitting the kind of model it is. It’s just that, subjectively, we often want models that emphasise different things. That said, there are a few general helpers we can make use of.</p>
 <section id="pseudo-absences-and-model-extent" class="level3">
 <h3 class="anchored" data-anchor-id="pseudo-absences-and-model-extent">3.1 Pseudo-absences and model extent</h3>
-<p>I’ve been a very naughty boy: I’ve saved a discussion of pseudo-absences and model extent until this section, even though strictly speaking. That’s because, while Araujo et al.&nbsp;put pseudo-absences in the first section (and I really can see why), I think it’s hard to talk about them without talking about model-fitting. And I’m writing this tutorial, not them, so I can do whatever I want. Sorry if it’s a bit confusing to talk about crtierion 1E in section 3.</p>
+<p>I’ve been a very naughty boy: I’ve saved a discussion of pseudo-absences and model extent until this section, even though strictly speaking they’re not in section 3 in their framework. That’s because, while Araujo et al.&nbsp;put pseudo-absences in the first section (and I really can see why), I think it’s hard to talk about them without talking about model-fitting. And I’m writing this tutorial, not them, so I can do whatever I want. Sorry if it’s a bit confusing to talk about criterion 1E in section 3.</p>
 <p>When modelling where species are found, it’s very useful to know where they’re not found. This absence information can help us distinguish determine what the limits to species’ distributions are, for example. The problem is that we rarely, if ever, have data on where species weren’t found. There are millions of species on Earth and essentially infinite places to look for them, and it’s hard enough to store where species <em>were</em> seen on GBIF let alone where species <em>weren’t</em> seen. Further, when people go out surveying, they are often looking <em>for</em> something and it turns out that humans quite often miss things they’re not looking for, so we don’t have a lot of surveys of absences.</p>
-<p><em>This matters for modelling the distributions of vectors because, as a result, species distribution models generate ‘pseudo-absences’ - they make up absences - in order to be able to fit statistical models</em>. With the notable exception of one-class support-vector machines (which are very good methods - come take my class in them or ask me about them if you like) we cannot fit species distribution models with data only on where species are seen. Thus models randomly pick from the ‘background’ of the model a series of random points where species weren’t seen and treat those as if they were real absences and then fit the models.</p>
+<p><strong>This matters for modelling the distributions of vectors because, as a result, species distribution models generate ‘pseudo-absences’ - they make up absences - in order to be able to fit statistical models</strong>. With the notable exception of one-class support-vector machines (which are very good methods - come take my class in them or ask me about them if you like) we cannot fit species distribution models with data only on where species are seen. Thus models randomly pick from the ‘background’ of the model a series of random points where species weren’t seen and treat those as if they were real absences and then fit the models.</p>
 <p>If this seems awful to you, then fair enough because it seems awful to me too, but with the exception of one-class support vector machines that’s the only option we have. There are ways of doing pseudo-absences in a sensible way, but the most important rules of thumb are (1) read what the algorithm is doing and make sure its assumptions are appropriate for your species, (2) make sure you’ve got data from across a wide enough region (both in G and E space) that you have picked up conditions where the species isn’t found, and (3) do what randomisation you are using for the pseudo-absences lots of times so you can average across the uncertainty it introduces. If you are ever reading a distribution modelling paper and it doesn’t mention pseudo-absences somewhere then honestly you can just put it down and read something else. It’s that important: <em>pseudo-absences are a big deal</em>.</p>
 </section>
 <section id="distribution-models-are-like-regular-statistical-models-so-check-them-properly" class="level3">
 <h3 class="anchored" data-anchor-id="distribution-models-are-like-regular-statistical-models-so-check-them-properly">3.2 Distribution models are like regular statistical models so check them properly</h3>
-<p>Would you ever fit a statistical model without checking whether the explanatory variables were correlated? Don’t answer because I’m sure you would (I know I have!) but we really mustn’t when fitting distribution models. Environmental data are often extremely ‘spatially auto-correlated’, which means that points that are nearby each other tend to be similar. They’re often very correlated in terms of underlying processes: places where it rains a lot tend to have very damp soil, and places where there’s high solar radiation tend to be very hot. These correlated processes can bias the distribution model you get in lots of very confusing ways. For example, if you have lots of variables that are similar (_e.g., where it’s hot, it’s also very dry, and there’s also not a lot of trees) then those variables will ‘compete’ with one-another for variance, such that the three <em>combined</em> seem important in your model but each separately doesn’t seem very important.</p>
-<p>Would you ever fit a statistical model without making sure that any bias or uncertainty in your underlying data isn’t accounted for? No, of course you wouldn’t! Alright, let’s be</p>
+<p>Would you ever fit a statistical model without checking whether the explanatory variables were correlated? Don’t answer because I’m sure you would (I know I have!) but we really mustn’t when fitting distribution models. Environmental data are often extremely ‘spatially auto-correlated’, which means that points that are nearby each other tend to be similar. They’re often very correlated in terms of underlying processes: places where it rains a lot tend to have very damp soil, and places where there’s high solar radiation tend to be very hot. These correlated processes and patterns can bias the distribution model you get in lots of very confusing ways. For example, if you have lots of variables that are similar (<em>e.g.</em>, where it’s hot, it’s also very dry, and there’s also not a lot of trees) then those variables will ‘compete’ with one-another for variance, such that the three <em>combined</em> seem important in your model but each separately doesn’t seem very important.</p>
+<p>Would you ever fit a statistical model without making sure that any bias or uncertainty in your underlying data isn’t accounted for? Well, again, let’s be honest you probably have, but the data we use for distribution models (normally taken from GBIF) are <em>extremely biased</em>. There are essentially entire fields of study devoted to understanding what kinds of species people are more likely to spot, and how to account for biases in where people go looking for species. The sampling effort is extremely uneven across the Earth, and if you’re not careful you can end up building a distribution model of where people like to go looking for species (warmer-than-average, drier-than-average, richer-than-average places) and not where your vector actually likes to live.</p>
+<p><strong>This matters for modelling the distributions of vectors because otherwise your results will be completely wrong.</strong> There won’t be an easy way to tell, from inspecting the model or the outputs, whether the model is totally wrong or not. ‘Garbage in, garbage out’ as I keep saying: it is impossible to build a statistical model that can robustly and reliably detect when the data it’s given breaks the fundamental assumptions of the model itself (this is something called “Gödel’s incompleteness theorem”). So please check it yourself.</p>
+</section>
+<section id="bonus-feature-learning-about-a-distribution-model-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="bonus-feature-learning-about-a-distribution-model-algorithm">3.3 Bonus feature: learning about a distribution model algorithm</h3>
+<p>The package we’ll be using, ‘biomod2’, is a fantastic package in that it lets you fit lots of different kinds of models. There is absolutely no way to explain all of these in the time we have available, so I’m making you a deal: in the practical, I’ll give you the opportunity to vote on one of a subset of methods. I’ll then explain that method to you. So this is a placeholder to emphasise that, while you may be wondering right now “but what model am I fitting?!” I will explain that to you in the practical. Think of this as a ‘feature’, not a ‘bug’ - you get to choose the one you learn!</p>
+</section>
+<section id="putting-it-into-practice-1" class="level3">
+<h3 class="anchored" data-anchor-id="putting-it-into-practice-1">3.4 Putting it into practice</h3>
+<p>Below is some code that fits a model to your bat data. Run it and make sure you’re comfortable with it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Using biomod2 model-building</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pull out a subset of training data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">full_name =</span> <span class="fu">rep</span>(<span class="dv">1</span>,<span class="fu">nrow</span>(long_lats)))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Format the data</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pipistrellus_data <span class="ot">&lt;-</span> <span class="fu">BIOMOD_FormatingData</span>(<span class="at">resp.var =</span> train_data,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">expl.var =</span> europe_bioclim,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.xy =</span> long_lats,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">resp.name =</span> full_name,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.rep =</span> <span class="dv">5</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.nb.absences =</span> <span class="fu">nrow</span>(long_lats),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">PA.strategy =</span> <span class="st">'random'</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">filter.raster =</span> T)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Train the model</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>pipistrellus_model <span class="ot">&lt;-</span> <span class="fu">BIOMOD_Modeling</span>(<span class="at">bm.format =</span> pipistrellus_data,</span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">modeling.id =</span> <span class="st">'GAM'</span>,</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">models =</span> <span class="st">"GAM"</span>,</span>
@@ -357,6 +560,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">var.import =</span> <span class="dv">3</span>,</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">metric.eval =</span> <span class="fu">c</span>(<span class="st">'TSS'</span>,<span class="st">'ROC'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>In this tutorial, I’m not going through the details of how different kinds of statistical model are fit. I will be available, in the practical, to answer any questions you have. Don’t worry about the fact the code above splits the model into training and validation subsets; I’m about to explain what’s going on there in a few paragraphs’ time.</p>
+<p>OK, now it’s time to make it better. Can you:</p>
+<ol type="1">
+<li>Figure out how to check whether or not the explanatory variables are correlated? Hint: None of the code above checks this, you’ll have to do it yourself. You might find the function ‘pairs’ to be useful…</li>
+<li>What is the pseudo-absence strategy being used in this modelling approach? Hint: ‘PA’ stands for ‘pseudo-absence’. Do you agree with it? How could we make it better/worse?</li>
+<li>What are the spatial (‘geographic’) and environmental extents of the model? Are they wide enough?</li>
+<li>Go through the Araujo table in the resources. What medal rating would you give your analysis so far under the first and second groups? Why?</li>
+<li>Check the above with a demonstrator (if you haven’t already!)</li>
+</ol>
+</section>
+</section>
+<section id="evaluating-your-model" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-your-model">4 Evaluating your model</h2>
+<p>This is the hardest section to fulfill (I think), and it’s the one that receives the least attention in the literature (I think): validation!</p>
+<section id="training-vs.-validation-data" class="level3">
+<h3 class="anchored" data-anchor-id="training-vs.-validation-data">4.1 Training vs.&nbsp;validation data</h3>
+<p>When fitting a machine learning (‘AI’) model, we typically split our data into training and validation subsets. We train (build) the model on the training subset, and then we test how well the model performs in the validation subset. We don’t want to mix up the two kinds of data so that we’ve got some independent data to test our model with. Quite often we’re working with methods where it’s impossible to get a p-value (or even an <span class="math inline">\(r^2\)</span> value) and so it’s quite hard to tell whether or not we’ve done a good job. That makes it absolutely vital to have a separate set of data to test what we’ve done with - we have no formal, proven statistical or mathematical framework to fall back on to see if we’ve done a good job or not.</p>
+<p><strong>This matters for modelling the distributions of vectors because if you don’t pick a proper set of validation data you’ll get the wrong answer</strong>. Are your validation data from the same region of E or G space? Well then are you absolutely certain that they’re actually independent data, and not just a collection of data taken from the same, unreliable scheme that generated your training data? Because if they are… then that’s not really an independent test of the data.</p>
+</section>
+<section id="receiver-operating-characteristic-curves-roc-curves-and-other-summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="receiver-operating-characteristic-curves-roc-curves-and-other-summary-statistics">4.2 Receiver Operating Characteristic curves (ROC curves) and other summary statistics</h3>
+<p>This isn’t in ‘The Araujo et al.&nbsp;Criteria’ but it’s something I feel strongly about so I’m going to write about it here anyway. My tutorial, my rules!</p>
+<p>When fitting a distribution model, it’s common to fall back on summary statistics that show how the model performed. Metrics such as ‘precision’ (how many of your predicted occurrences were correct) and recall (the fraction of occurrences your model predicted) are really loved by modellers. So too are receiver-operating characteristic curves (ROCs), where the rate of true-positives (correctly identifying occurrences) are plotted against rates of false-positives (incorrectly identifying occurrences) are plotted. Figure 3 shows such a curve: the important thing to notice is that you almost never, ever get a ‘perfect classifier’. If you identify more true positives (vertical axis) then you’re necessarily going to have more false-alarms (the horizontal axis). It’s a bit like fire alarms: we absolutely cannot have a fire alarm that misses a fire, so we have false-alarms where the alarm goes off because we need to set it so sensitive that it detects even very rare events.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Roc_curve.svg/1024px-Roc_curve.svg.png" class="img-fluid figure-img"></p>
+<figcaption><em>Figure 3. Receiver Operating Characteristic Curves (ROC curves)</em>. Taken from wikipedia (look, it’s a good diagram and I can’t do better so why try?!): <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic">https://en.wikipedia.org/wiki/Receiver_operating_characteristic</a>. Description in the text.</figcaption>
+</figure>
+</div>
+<p>The problem, however, is that these curves worked very well in World War II at identifying planes, but for species distribution models the data are auto-correlated and so you can’t just assume that a ROC-type approach will work. That the model tends to do very well in data that may not be perfectly independent is not really of interest (see above), and so we need to use an approach that is robust to those issues. For more on this, read about the criminally under-valued ‘temporal validation plots’ developed by a friend of mine (no conflict there!): <a href="https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12181">Rapacciuolo et al.&nbsp;(2014) Methods in Ecology &amp; Evolution 5(5): 407</a>.</p>
+<p><strong>This matters for vector distribution models because any single estimator of whether a model is doing a good job will have similar problems</strong>. Gödel’s incompleteness theorem means that you can never fully understand a system: every statistical test has, itself, a set of assumptions that you need to test. So if you want to see whether your model is doing a good job, tests are good, but at the end of the day you have to check for yourself. So my advice? Plot out your model. See where in geographic and environmental space the model is doing well and make mistakes. Look for patterns: are there particular regions, or periods of time, that tend to do well? And then see if you can find a way to improve your model accordingly.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Evaluating and plotting models</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -390,390 +624,273 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pipistrelle_rangesize_change<span class="sc">$</span>Diff.By.Pixel[[<span class="dv">4</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-
-
+<p>OK, now it’s time to make it better. Can you:</p>
+<ol type="1">
+<li>Figure out how to plot a ROC curve for your model?</li>
+<li>See where in space you’re under/over predicting occurrences?</li>
+<li>Go through the Araujo table in the resources. What medal rating would you give your analysis so far under all the groups? Why?</li>
+<li>Check the above with a demonstrator (if you haven’t already!)</li>
+</ol>
 </section>
+</section>
+<section id="the-final-test" class="level2">
+<h2 class="anchored" data-anchor-id="the-final-test">5 The Final Test</h2>
+<p>You’ve made it this far? Good job! Now what you should do is repeat this process for a vector you are interested in yourself. Or, perhaps… <a href="https://sphere-ppl.org/pages/Forecasting_Contests/">enter our forecasting contest!</a> And win a fabulous prize!…</p>
+
+
 </section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
     }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const disableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'prefetch';
-    }
-  }
-  const enableStylesheet = (stylesheets) => {
-    for (let i=0; i < stylesheets.length; i++) {
-      const stylesheet = stylesheets[i];
-      stylesheet.rel = 'stylesheet';
-    }
-  }
-  const manageTransitions = (selector, allowTransitions) => {
-    const els = window.document.querySelectorAll(selector);
-    for (let i=0; i < els.length; i++) {
-      const el = els[i];
-      if (allowTransitions) {
-        el.classList.remove('notransition');
-      } else {
-        el.classList.add('notransition');
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-  }
-  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
-    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
-    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
-    let newTheme = '';
-    if(darkModeDefault) {
-      newTheme = isAlternate ? baseTheme : alternateTheme;
-    } else {
-      newTheme = isAlternate ? alternateTheme : baseTheme;
-    }
-    const changeGiscusTheme = () => {
-      // From: https://github.com/giscus/giscus/issues/336
-      const sendMessage = (message) => {
-        const iframe = document.querySelector('iframe.giscus-frame');
-        if (!iframe) return;
-        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      sendMessage({
-        setConfig: {
-          theme: newTheme
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
         }
       });
     }
-    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
-    if (isGiscussLoaded) {
-      changeGiscusTheme();
-    }
-  }
-  const toggleColorMode = (alternate) => {
-    // Switch the stylesheets
-    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
-    manageTransitions('#quarto-margin-sidebar .nav-link', false);
-    if (alternate) {
-      enableStylesheet(alternateStylesheets);
-      for (const sheetNode of alternateStylesheets) {
-        if (sheetNode.id === "quarto-bootstrap") {
-          toggleBodyColorMode(sheetNode);
-        }
-      }
-    } else {
-      disableStylesheet(alternateStylesheets);
-      toggleBodyColorPrimary();
-    }
-    manageTransitions('#quarto-margin-sidebar .nav-link', true);
-    // Switch the toggles
-    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
-    for (let i=0; i < toggles.length; i++) {
-      const toggle = toggles[i];
-      if (toggle) {
-        if (alternate) {
-          toggle.classList.add("alternate");     
-        } else {
-          toggle.classList.remove("alternate");
-        }
-      }
-    }
-    // Hack to workaround the fact that safari doesn't
-    // properly recolor the scrollbar when toggling (#1455)
-    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
-      manageTransitions("body", false);
-      window.scrollTo(0, 1);
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        manageTransitions("body", true);
-      }, 40);  
-    }
-  }
-  const isFileUrl = () => { 
-    return window.location.protocol === 'file:';
-  }
-  const hasAlternateSentinel = () => {  
-    let styleSentinel = getColorSchemeSentinel();
-    if (styleSentinel !== null) {
-      return styleSentinel === "alternate";
-    } else {
-      return false;
-    }
-  }
-  const setStyleSentinel = (alternate) => {
-    const value = alternate ? "alternate" : "default";
-    if (!isFileUrl()) {
-      window.localStorage.setItem("quarto-color-scheme", value);
-    } else {
-      localAlternateSentinel = value;
-    }
-  }
-  const getColorSchemeSentinel = () => {
-    if (!isFileUrl()) {
-      const storageValue = window.localStorage.getItem("quarto-color-scheme");
-      return storageValue != null ? storageValue : localAlternateSentinel;
-    } else {
-      return localAlternateSentinel;
-    }
-  }
-  const darkModeDefault = false;
-  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
-  // Dark / light mode switch
-  window.quartoToggleColorScheme = () => {
-    // Read the current dark / light value 
-    let toAlternate = !hasAlternateSentinel();
-    toggleColorMode(toAlternate);
-    setStyleSentinel(toAlternate);
-    toggleGiscusIfUsed(toAlternate, darkModeDefault);
-  };
-  // Ensure there is a toggle, if there isn't float one in the top right
-  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
-    const a = window.document.createElement('a');
-    a.classList.add('top-right');
-    a.classList.add('quarto-color-scheme-toggle');
-    a.href = "";
-    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
-    const i = window.document.createElement("i");
-    i.classList.add('bi');
-    a.appendChild(i);
-    window.document.body.appendChild(a);
-  }
-  // Switch to dark mode if need be
-  if (hasAlternateSentinel()) {
-    toggleColorMode(true);
-  } else {
-    toggleColorMode(false);
-  }
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
-      }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
         }
-        return container.innerHTML
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -781,185 +898,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
