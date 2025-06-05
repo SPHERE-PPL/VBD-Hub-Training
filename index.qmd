@@ -34,7 +34,7 @@ Welcome to the SPHERE-PPL training on Temporal & Spatial Modelling of Disease Ve
 
 -   [Standards Table](resources/Ranking_Table.pdf)
 
-**Phylogenetic Overdispersion in Floridian Oak Communities (Cavender-Bares et al 2004 - American Naturalist)**
+**The merging of community ecology and phylogenetic biology (Cavender-Bares et al 2009 - Ecology Letters)**
 
 -   [Paper](resources/Cavender-Bares-2009.pdf)
 
